@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0A0A0A;
+  --foreground: #FFFFFF;
+  --card: #111111;
+  --primary: #3B82F6;
+  --secondary: #8B5CF6;
+  --muted: #A1A1AA;
+  --border: #27272A;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-pulse-slow: pulse-slow 8s infinite alternate;
+  --animate-grid-float: grid-float 20s linear infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.1); }
+  }
+  @keyframes grid-float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
   }
 }
 
-body {
-  background: var(--background);
+/* Custom Base Layer Styling */
+html {
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Lenis scroll smoothing configurations */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
+}
+
+/* Glassmorphism Classes */
+.glass {
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-navbar {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Animated Grid Background */
+.grid-bg {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(135deg, #FFFFFF 30%, #A1A1AA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Door Transition Vignette Overlay */
+.vignette-overlay {
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.95);
+  background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+}
+
+/* Heavy Shaky effect */
+@keyframes heavy-shake {
+  0%, 100% { transform: translate(0, 0) scale(1.02); }
+  10% { transform: translate(-3px, -2px) scale(1.02); }
+  20% { transform: translate(-2px, 2px) scale(1.02); }
+  30% { transform: translate(2px, -2px) scale(1.02); }
+  40% { transform: translate(-2px, 3px) scale(1.02); }
+  50% { transform: translate(3px, 2px) scale(1.02); }
+  60% { transform: translate(2px, -3px) scale(1.02); }
+  70% { transform: translate(-3px, -2px) scale(1.02); }
+  80% { transform: translate(3px, -2px) scale(1.02); }
+  90% { transform: translate(-2px, 3px) scale(1.02); }
+}
+
+.animate-heavy-shake {
+  animation: heavy-shake 0.15s infinite;
+}
+
+/* Smoke Cloud Drift animations */
+@keyframes smoke-drift-1 {
+  0% { transform: translate(-10%, -15%) scale(1) rotate(0deg); opacity: 0.08; }
+  100% { transform: translate(15%, 15%) scale(1.4) rotate(360deg); opacity: 0.28; }
+}
+
+@keyframes smoke-drift-2 {
+  0% { transform: translate(15%, -10%) scale(1.1) rotate(0deg); opacity: 0.05; }
+  100% { transform: translate(-15%, 10%) scale(1.6) rotate(-360deg); opacity: 0.22; }
+}
+
+.animate-smoke-1 {
+  animation: smoke-drift-1 12s ease-in-out infinite alternate;
+}
+
+.animate-smoke-2 {
+  animation: smoke-drift-2 16s ease-in-out infinite alternate;
+}
+
