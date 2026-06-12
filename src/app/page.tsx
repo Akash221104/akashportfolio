@@ -30,7 +30,7 @@ export default function Home() {
         <main className="flex-1">
           <Hero />
           
-          <div id="about">
+          <div>
             <About />
           </div>
           

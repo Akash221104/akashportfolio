@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useAnimation } from '@/context/AnimationContext';
 
-// Dynamically load the WebGL 3D Tensor Grid Matrix background scene with SSR disabled
+// Dynamically load the Neural Synapse background scene with SSR disabled
 const BackgroundScene = dynamic(() => import('./BackgroundScene'), {
   ssr: false,
   loading: () => <LoadingFallback />,
@@ -24,7 +24,7 @@ function LoadingFallback() {
   );
 }
 
-// 2D Interactive Fallback for Low-End / Slow Devices to prevent CPU/WebGL lags
+// 2D Interactive Fallback for Low-End / Slow Devices
 function LowEndFallback({ onNodeClick }: { onNodeClick: (id: string) => void }) {
   const nodes = [
     { id: 'genai', name: 'Generative AI' },
@@ -38,7 +38,6 @@ function LowEndFallback({ onNodeClick }: { onNodeClick: (id: string) => void }) 
 
   return (
     <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-4 z-0 pointer-events-auto bg-black/50">
-      {/* 2D grid matrix fallback representation for slow devices */}
       <div className="flex flex-wrap items-center justify-center gap-3 max-w-lg select-none">
         {nodes.map((node) => (
           <button
@@ -56,9 +55,10 @@ function LowEndFallback({ onNodeClick }: { onNodeClick: (id: string) => void }) 
 
 interface About3DProps {
   onNodeClick: (nodeId: string) => void;
+  mouse: React.MutableRefObject<{x: number; y: number}>;
 }
 
-export default function About3D({ onNodeClick }: About3DProps) {
+export default function About3D({ onNodeClick, mouse }: About3DProps) {
   const { isLowEndDevice } = useAnimation();
 
   // If client is a low-end device, bypass WebGL Canvas to save CPU/GPU performance
@@ -66,5 +66,5 @@ export default function About3D({ onNodeClick }: About3DProps) {
     return <LowEndFallback onNodeClick={onNodeClick} />;
   }
 
-  return <BackgroundScene onNodeClick={onNodeClick} />;
+  return <BackgroundScene onNodeClick={onNodeClick} mouse={mouse} />;
 }

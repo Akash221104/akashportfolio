@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useMemo, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -340,29 +340,21 @@ function CameraRig({ mouse }: { mouse: React.MutableRefObject<{x:number;y:number
   return null;
 }
 
-// ─── Full scene ───────────────────────────────────────────────────────────────────
-function NeuralScene({ onNodeClick }: { onNodeClick: (id: string) => void }) {
+// ─── Full scene ───────────────────────────────────────────────────────────────────────
+function NeuralScene({
+  onNodeClick,
+  mouse,
+}: {
+  onNodeClick: (id: string) => void;
+  mouse: React.MutableRefObject<{x:number;y:number}>;
+}) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const mouse = useRef({ x: 0, y: 0 });
 
   const handleClick = useCallback((id: string) => {
     setSelectedId(prev => (prev === id ? null : id));
     onNodeClick(id);
   }, [onNodeClick]);
-
-  // expose mouse ref for CameraRig
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      const el = document.getElementById('about-canvas-container');
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      mouse.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    };
-    window.addEventListener('mousemove', handler, { passive: true });
-    return () => window.removeEventListener('mousemove', handler);
-  }, []);
 
   return (
     <>
@@ -395,9 +387,10 @@ function NeuralScene({ onNodeClick }: { onNodeClick: (id: string) => void }) {
 // ─── Export ───────────────────────────────────────────────────────────────────────
 interface BackgroundSceneProps {
   onNodeClick: (nodeId: string) => void;
+  mouse: React.MutableRefObject<{x:number;y:number}>;
 }
 
-export default function BackgroundScene({ onNodeClick }: BackgroundSceneProps) {
+export default function BackgroundScene({ onNodeClick, mouse }: BackgroundSceneProps) {
   return (
     <div
       id="about-canvas-container"
@@ -408,7 +401,7 @@ export default function BackgroundScene({ onNodeClick }: BackgroundSceneProps) {
         gl={{ antialias: true, alpha: true }}
         dpr={[1, 1.5]}
       >
-        <NeuralScene onNodeClick={onNodeClick} />
+        <NeuralScene onNodeClick={onNodeClick} mouse={mouse} />
       </Canvas>
     </div>
   );

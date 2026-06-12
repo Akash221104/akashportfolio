@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import About3D from './About3D';
 import { Brain, Cpu, CheckCircle2, ChevronRight, X, Zap } from 'lucide-react';
@@ -97,6 +97,13 @@ const NODE_DETAILS: Record<string, { title: string; subtitle: string; items: str
 
 export default function About() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  }, []);
 
   const handleNodeClick = (nodeId: string) => {
     setSelectedNode(prev => prev === nodeId ? null : nodeId);
@@ -110,9 +117,10 @@ export default function About() {
       id="about"
       className="relative overflow-hidden"
       style={{ minHeight: '100vh', background: '#020208' }}
+      onMouseMove={handleMouseMove}
     >
       {/* ── Full-background 3D Neural Scene ── */}
-      <About3D onNodeClick={handleNodeClick} />
+      <About3D onNodeClick={handleNodeClick} mouse={mouseRef} />
 
       {/* ── Radial vignette to focus center content ── */}
       <div
