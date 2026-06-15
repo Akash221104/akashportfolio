@@ -181,12 +181,12 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
       <div
         className="min-h-screen flex flex-col"
         style={{
-          transform: isIntroActive ? (isDoorOpeningStarted ? 'scale(1)' : 'scale(0.95)') : 'scale(1)',
+          transform: isIntroActive ? (isDoorOpeningStarted ? 'scale(1)' : 'scale(0.95)') : 'none',
           opacity: isIntroActive ? (isDoorOpeningStarted ? 1 : 0) : 1,
           filter: isIntroActive ? (isDoorOpeningStarted ? 'none' : 'blur(10px)') : 'none',
           transition: isIntroActive ? 'transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
           pointerEvents: isIntroComplete ? 'auto' : 'none',
-          willChange: 'transform, opacity, filter',
+          willChange: isIntroActive ? 'transform, opacity, filter' : 'auto',
         }}
       >
         {children}
