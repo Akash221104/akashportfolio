@@ -7,12 +7,7 @@ import { Github, Linkedin } from '@/components/ui/Icons';
 import Button from './ui/Button';
 import { useAnimation } from '@/context/AnimationContext';
 
-const stats = [
-  { value: '2000+', label: 'Students Impacted' },
-  { value: '15+', label: 'Events Organized' },
-  { value: '50+', label: 'Team Members Mentored' },
-  { value: 'Multiple', label: 'AI Projects Built' },
-];
+
 
 export default function Hero() {
   const { isIntroActive, isDoorOpeningStarted, isIntroComplete } = useAnimation();
@@ -38,31 +33,24 @@ export default function Hero() {
         style={{ opacity: videoOpacity, scale: videoScale }}
         className="absolute inset-0 w-full h-full z-0 overflow-hidden"
       >
-        {isIntroComplete ? (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/hero_fallback_bg.png"
-            className="w-full h-full object-cover opacity-60 md:opacity-75 block"
-          >
-            <source src="/hero-bg.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center block opacity-60 md:opacity-75"
-            style={{ backgroundImage: 'url("/hero_fallback_bg.png")' }}
-          />
-        )}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/hero_fallback_bg.png"
+          className="w-full h-full object-cover opacity-60 md:opacity-75 block"
+        >
+          <source src="/hero-bg.mp4" type="video/mp4" />
+        </video>
       </motion.div>
 
       {/* Layer 2: Dark Overlay + Subtle Blur */}
       <div className="absolute inset-0 bg-black/75 backdrop-blur-[1px] z-10 pointer-events-none" />
 
-      {/* Layer 3: Gradient Overlay (fades out at bottom to blend with subsequent sections) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background z-10 pointer-events-none" />
+      {/* Layer 3: Bottom Gradient Fade (blends the video background seamlessly into the About section) */}
+      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-background z-10 pointer-events-none" />
 
       {/* Premium Floating Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[35vw] h-[35vw] rounded-full bg-primary/10 blur-[120px] animate-pulse-slow z-10 pointer-events-none" />
@@ -157,60 +145,59 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex items-center gap-6 mb-20"
+          className="flex items-center gap-8 mb-20"
         >
-          <a
-            href="https://www.linkedin.com/in/akash-satpute-548b5a256/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2.5 rounded-lg border border-border/80 bg-white/5 text-muted hover:text-white hover:border-muted transition-all duration-300 hover:scale-105"
-            aria-label="LinkedIn Profile"
-          >
-            <Linkedin className="w-5 h-5" />
-          </a>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2.5 rounded-lg border border-border/80 bg-white/5 text-muted hover:text-white hover:border-muted transition-all duration-300 hover:scale-105"
-            aria-label="GitHub Profile"
-          >
-            <Github className="w-5 h-5" />
-          </a>
-          <a
-            href="https://akashblogss.hashnode.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2.5 rounded-lg border border-border/80 bg-white/5 text-muted hover:text-white hover:border-muted transition-all duration-300 hover:scale-105"
-            aria-label="Hashnode Blog"
-          >
-            <BookOpen className="w-5 h-5" />
-          </a>
+          {/* LinkedIn */}
+          <div className="flex flex-col items-center gap-2 group">
+            <a
+              href="https://www.linkedin.com/in/akash-satpute-548b5a256/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer"
+              aria-label="LinkedIn Profile"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-primary transition-colors duration-300 uppercase font-bold">
+              LinkedIn
+            </span>
+          </div>
+
+          {/* GitHub */}
+          <div className="flex flex-col items-center gap-2 group">
+            <a
+              href="https://github.com/Akash221104"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-white group-hover:border-white/50 group-hover:bg-white/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] cursor-pointer"
+              aria-label="GitHub Profile"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-white transition-colors duration-300 uppercase font-bold">
+              GitHub
+            </span>
+          </div>
+
+          {/* Blog */}
+          <div className="flex flex-col items-center gap-2 group">
+            <a
+              href="https://akashblogss.hashnode.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-secondary group-hover:border-secondary/50 group-hover:bg-secondary/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-pointer"
+              aria-label="Hashnode Blog"
+            >
+              <BookOpen className="w-5 h-5" />
+            </a>
+            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-secondary transition-colors duration-300 uppercase font-bold">
+              Blog
+            </span>
+          </div>
         </motion.div>
       </motion.div>
 
-      {/* Animated Statistics Strip */}
-      <div className="relative z-20 w-full max-w-6xl border-y border-border/60 bg-black/40 backdrop-blur-md py-6 md:py-8 px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {stats.map((stat, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex flex-col items-center justify-center"
-            >
-              <span className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight text-gradient-primary mb-1">
-                {stat.value}
-              </span>
-              <span className="text-xs sm:text-sm text-muted font-medium">
-                {stat.label}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+
     </section>
   );
 }

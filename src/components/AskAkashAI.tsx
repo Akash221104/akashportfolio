@@ -40,11 +40,6 @@ export default function AskAkashAI() {
     }
   }, [messages, isTyping]);
 
-  // Auto-hide the speech bubble after 6 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setShowBubble(false), 6000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
@@ -276,7 +271,7 @@ export default function AskAkashAI() {
             onClick={handleOpen}
           >
             <Sparkles className="w-4 h-4 shrink-0 animate-pulse" />
-            Ask about Akash here!
+            Ask about Akash!
             {/* Triangle pointer */}
             <span className="absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-blue-600" />
           </motion.div>

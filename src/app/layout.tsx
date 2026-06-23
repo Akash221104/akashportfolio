@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "Next.js Developer India",
     "TypeScript Full Stack"
   ],
-  authors: [{ name: "Akash Satpute", url: "sakash22comp@student.mes.ac.in" }],
+  authors: [{ name: "Akash Satpute", url: "mailto:assatpute123456@gmail.com" }],
   creator: "Akash Satpute",
   openGraph: {
     type: "website",
@@ -84,6 +84,12 @@ export default function RootLayout({
           href="/OPENING.webm"
           as="video"
           type="video/webm"
+        />
+        <link
+          rel="preload"
+          href="/hero-bg.mp4"
+          as="video"
+          type="video/mp4"
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">

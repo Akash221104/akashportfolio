@@ -67,7 +67,7 @@ export default function Navbar() {
                 </a>
               );
             }
-            const isActive = pathname === '/' && pathname + item.href.substring(1) === item.href;
+            const isActive = pathname === item.href;
 
             return (
               <Link
@@ -87,7 +87,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="outline" size="sm" className="gap-1.5">
+            <Button variant="primary" size="sm" className="gap-1.5 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
               Connect
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Button>
@@ -144,7 +144,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="w-full mt-2"
               >
-                <Button variant="outline" className="w-full gap-1.5 justify-center">
+                <Button variant="primary" className="w-full gap-1.5 justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
                   Connect
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Button>

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from './ui/Card';
 import Button from './ui/Button';
-import { Mail, BookOpen, Send, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Mail, Phone, BookOpen, Send, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Github, Linkedin } from '@/components/ui/Icons';
 
 export default function Contact() {
@@ -94,10 +94,25 @@ export default function Contact() {
                     <div>
                       <span className="text-[10px] text-muted block">Direct Email</span>
                       <a
-                        href="mailto:sakash22comp@student.mes.ac.in"
+                        href="mailto:assatpute123456@gmail.com"
                         className="text-xs text-white hover:underline font-medium"
                       >
-                        sakash22comp@student.mes.ac.in
+                        assatpute123456@gmail.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-muted block">Call / WhatsApp</span>
+                      <a
+                        href="tel:+919987935895"
+                        className="text-xs text-white hover:underline font-medium"
+                      >
+                        +91 9987935895
                       </a>
                     </div>
                   </div>
@@ -120,7 +135,7 @@ export default function Contact() {
                     <span className="text-[10px] font-medium">LinkedIn</span>
                   </a>
                   <a
-                    href="https://github.com"
+                    href="https://github.com/Akash221104"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 rounded-lg border border-border bg-white/[0.01] hover:bg-white/5 text-muted hover:text-white flex flex-col items-center justify-center text-center gap-2 transition-colors group cursor-pointer"

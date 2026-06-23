@@ -7,8 +7,10 @@ const KNOWLEDGE_BASE = {
   personal: {
     name: 'Akash Satpute',
     location: 'Navi Mumbai, India',
-    email: 'sakash22comp@student.mes.ac.in',
+    email: 'assatpute123456@gmail.com',
     linkedin: 'https://www.linkedin.com/in/akash-satpute-548b5a256/',
+    github: 'https://github.com/Akash221104',
+    phone: '+91 9987935895',
     hashnode: 'https://akashblogss.hashnode.dev/',
     tagline: 'Building AI-powered applications, intelligent systems, and scalable web solutions while empowering developer communities.',
     summary: 'Akash Satpute is a Computer Engineering student at Pillai College of Engineering with hands-on experience in Artificial Intelligence, Full Stack Development, Cloud Computing, and Developer Communities.',
@@ -245,13 +247,14 @@ He maintains an excellent academic record with a CGPA of **8.9+** out of 10.`,
   }
 
   // Intent 8: Contact / Hire
-  if (normalized.includes('contact') || normalized.includes('email') || normalized.includes('hire') || normalized.includes('linkedin') || normalized.includes('reach')) {
-    const p = KNOWLEDGE_BASE.personal;
+  if (normalized.includes('contact') || normalized.includes('email') || normalized.includes('hire') || normalized.includes('linkedin') || normalized.includes('reach') || normalized.includes('phone') || normalized.includes('call') || normalized.includes('whatsapp')) {
+    const p = KNOWLEDGE_BASE.personal as any; // Type assertions for custom fields
     return {
       answer: `You can reach out to Akash via:
-• **Email**: [sakash22comp@student.mes.ac.in](mailto:${p.email})
+• **Email**: [${p.email}](mailto:${p.email})
 • **LinkedIn**: [Akash Satpute on LinkedIn](${p.linkedin})
-• **GitHub**: [github.com/akashsatpute](https://github.com)
+• **GitHub**: [Akash221104 on GitHub](${p.github})
+• **Phone / WhatsApp**: [${p.phone}](tel:+919987935895)
 • **Blog**: [akashblogss.hashnode.dev](${p.hashnode})
 
 Feel free to write him a message through the contact form at the bottom of the home page!`,

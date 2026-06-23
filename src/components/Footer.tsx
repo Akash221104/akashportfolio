@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import { Github, Linkedin } from '@/components/ui/Icons';
+import VisitorCounter from './VisitorCounter';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -34,7 +35,7 @@ export default function Footer() {
         {/* Social Navigation */}
         <div className="flex items-center gap-5">
           <a
-            href="https://github.com"
+            href="https://github.com/Akash221104"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted hover:text-white transition-colors"
@@ -63,6 +64,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto text-center border-t border-border/40 mt-8 pt-6">
+        <VisitorCounter />
         <p className="text-xs text-muted/50 flex items-center justify-center gap-1">
           &copy; {currentYear} Akash Satpute. All rights reserved.
         </p>

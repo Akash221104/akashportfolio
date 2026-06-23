@@ -38,8 +38,8 @@ const projects: Project[] = [
       'Difficulty-based node recommendation engine',
     ],
     tech: ['Next.js', 'Node.js', 'AI APIs', 'YouTube API', 'PostgreSQL'],
-    github: 'https://github.com/akashsatpute/coursecrafter',
-    demo: 'https://coursecrafter-demo.vercel.app',
+    github: 'https://github.com/Anu010404/ai-youtube',
+    demo: 'https://ai-youtube-inky.vercel.app',
     color: 'from-emerald-600/20 to-green-600/20',
     caseStudy: {
       challenge: 'Traditional online courses are static and rigid. Students often waste hours browsing scattered tutorials on YouTube without a clear sequence, structure, or difficulty mapping.',
@@ -68,8 +68,8 @@ const projects: Project[] = [
       'Secure warning system & disclaimer filters',
     ],
     tech: ['Python', 'Scikit-learn', 'Flask', 'Pandas', 'NumPy'],
-    github: 'https://github.com/akashsatpute/medicine-recommender',
-    demo: 'https://med-recommend-demo.vercel.app',
+    github: 'https://github.com/Akash221104/Medicinesystem',
+    demo: '',
     color: 'from-teal-600/20 to-emerald-600/20',
     caseStudy: {
       challenge: 'Preliminary healthcare diagnosis is inaccessible to many, leading to ignored symptoms or inaccurate self-medication. Patients need guidance on symptoms before clinical visits.',
@@ -98,8 +98,8 @@ const projects: Project[] = [
       'Context-aware responses with Ollama local LLMs',
     ],
     tech: ['Next.js', 'Node.js', 'Ollama', 'Llama 3', 'ChromaDB', 'TypeScript'],
-    github: 'https://github.com/akashsatpute/rag-chatbot',
-    demo: 'https://rag-chatbot-demo.vercel.app',
+    github: 'https://github.com/Akash221104/ollamachatbot',
+    demo: '',
     color: 'from-green-600/20 to-teal-600/20',
     caseStudy: {
       challenge: 'Enterprises struggle to query knowledge base files quickly. Traditional keyword searching fails to answer context-dependent questions, and uploading documents to public cloud LLMs poses data privacy leaks.',
@@ -128,8 +128,8 @@ const projects: Project[] = [
       'Visual business dashboards & revenue metrics',
     ],
     tech: ['Python', 'SQL', 'Streamlit', 'Statsmodels', 'Matplotlib'],
-    github: 'https://github.com/akashsatpute/retail-assistant',
-    demo: 'https://retail-assistant-demo.vercel.app',
+    github: 'https://github.com/Akash221104/Smart-Retail-Decision-Assistant',
+    demo: 'https://akash221104-smart-retail-de-indian-retailsmart-assistant-gglbdj.streamlit.app/',
     color: 'from-emerald-600/20 to-teal-600/20',
     caseStudy: {
       challenge: 'Small to mid-size retail businesses fail to identify sales patterns, leading to excess dead stock or frequent stockouts of top-selling items.',
@@ -308,40 +308,16 @@ function ProjectCard({
           </div>
 
           {/* Actions buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center w-full">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setSelectedProj(project)}
-              className="flex-1 gap-1.5 cursor-pointer hover:border-emerald-500/50 hover:bg-emerald-500/5 hover:text-white transition-all duration-300 text-xs font-semibold"
+              className="w-full gap-2 cursor-pointer border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/15 text-emerald-400 hover:text-white hover:border-emerald-400 transition-all duration-300 text-xs font-bold py-2.5 shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]"
             >
-              <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-              Case Study
+              <BookOpen className="w-4 h-4 text-emerald-400 group-hover:text-white transition-colors" />
+              View Case Study
             </Button>
-            
-            <motion.a
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.95 }}
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-lg border border-border bg-white/5 text-muted hover:text-white hover:border-emerald-500/20 hover:bg-emerald-500/10 transition-colors flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer"
-            >
-              <Github className="w-4 h-4 shrink-0" />
-              Source Code
-            </motion.a>
-
-            <motion.a
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.95 }}
-              href={project.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 rounded-lg border border-border bg-white/5 text-muted hover:text-white hover:border-emerald-500/20 hover:bg-emerald-500/10 transition-colors flex items-center justify-center gap-1.5 text-xs font-semibold cursor-pointer"
-            >
-              <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-              Live Demo
-            </motion.a>
           </div>
         </div>
       </div>
@@ -580,7 +556,7 @@ export default function Projects() {
                   </Button>
                 </a>
                 <a
-                  href={selectedProj.demo}
+                  href={selectedProj.demo || selectedProj.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1"

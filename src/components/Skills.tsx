@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Card from './ui/Card';
 import { Code2, Monitor, Server, Database, Cpu, Cloud, Settings, BarChart2 } from 'lucide-react';
 
@@ -58,14 +58,33 @@ const categories = [
 
 export default function Skills() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const blobY1 = useTransform(scrollYProgress, [0, 1], [-150, 150]);
+  const blobY2 = useTransform(scrollYProgress, [0, 1], [150, -150]);
 
   const filteredCategories = activeCategory === 'all' 
     ? categories 
     : categories.filter(c => c.id === activeCategory);
 
   return (
-    <section id="skills" className="py-24 px-6 md:px-12 bg-black/40">
-      <div className="max-w-6xl mx-auto">
+    <section ref={sectionRef} id="skills" className="relative py-24 px-6 md:px-12 bg-black/40 overflow-hidden">
+      {/* Floating Parallax Background Blobs */}
+      <motion.div
+        style={{ y: blobY1 }}
+        className="absolute -top-[10%] -right-[10%] w-[35vw] h-[35vw] rounded-full bg-secondary/5 blur-[120px] z-0 pointer-events-none"
+      />
+      <motion.div
+        style={{ y: blobY2 }}
+        className="absolute -bottom-[10%] -left-[10%] w-[40vw] h-[40vw] rounded-full bg-primary/5 blur-[130px] z-0 pointer-events-none"
+      />
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center mb-16">
           <motion.h2

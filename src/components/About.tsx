@@ -1,24 +1,136 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useMotionTemplate } from 'framer-motion';
 import About3D from './About3D';
+
+interface AboutCardProps {
+  id: string;
+  label: string;
+  color: string;
+  text: React.ReactNode;
+  idx: number;
+}
+
+function AboutCard({ id, label, color, text, idx }: AboutCardProps) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleCardMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  // Determine lock colors based on card hover styles
+  let lockColorClass = "text-sky-400/40";
+  let borderLockColor = "border-sky-500/20";
+  let centerLineColor = "bg-sky-500/30";
+  let coordinatesHex = "0xAB1";
+  if (color.includes("purple")) {
+    lockColorClass = "text-purple-400/40";
+    borderLockColor = "border-purple-500/20";
+    centerLineColor = "bg-purple-500/30";
+    coordinatesHex = "0xAB2";
+  } else if (color.includes("blue")) {
+    lockColorClass = "text-blue-400/40";
+    borderLockColor = "border-blue-500/20";
+    centerLineColor = "bg-blue-500/30";
+    coordinatesHex = "0xAB3";
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 * idx }}
+      onMouseMove={handleCardMouseMove}
+      className={`p-6 rounded-xl border border-white/5 bg-zinc-950/25 hover:bg-zinc-950/45 backdrop-blur-md transition-all duration-500 group ${color} hover:shadow-[0_0_25px_rgba(59,130,246,0.06)] relative overflow-hidden`}
+    >
+      {/* Background Spotlight Glow */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              350px circle at ${mouseX}px ${mouseY}px,
+              ${color.includes("sky") ? 'rgba(56, 189, 248, 0.08)' : color.includes("purple") ? 'rgba(168, 85, 247, 0.08)' : 'rgba(59, 130, 246, 0.08)'},
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {/* Sleek bracket follower for cursor */}
+      <motion.div
+        className={`pointer-events-none absolute w-14 h-14 opacity-0 group-hover:opacity-100 transition-opacity duration-350 ${lockColorClass} select-none z-10 hidden md:block`}
+        style={{
+          left: mouseX,
+          top: mouseY,
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        {/* Four corner bracket marks */}
+        <div className={`absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 ${borderLockColor.replace('/20', '/50')}`} />
+        <div className={`absolute top-0 right-0 w-2.5 h-2.5 border-t-2 border-r-2 ${borderLockColor.replace('/20', '/50')}`} />
+        <div className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-b-2 border-l-2 ${borderLockColor.replace('/20', '/50')}`} />
+        <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 ${borderLockColor.replace('/20', '/50')}`} />
+
+        {/* Pulsing center micro-dot */}
+        <div className={`absolute w-1.5 h-1.5 rounded-full ${centerLineColor.replace('/30', '/70')} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse`} />
+
+        {/* Small tech coordinate label */}
+        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-widest opacity-60 uppercase whitespace-nowrap">
+          READ: {coordinatesHex}
+        </span>
+      </motion.div>
+
+      {/* HUD Content panel corner brackets */}
+      <div className="absolute top-3 left-3 w-2 h-2 border-t border-l border-white/10 pointer-events-none" />
+      <div className="absolute top-3 right-3 w-2 h-2 border-t border-r border-white/10 pointer-events-none" />
+      <div className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-white/10 pointer-events-none" />
+      <div className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-white/10 pointer-events-none" />
+
+      <div className="relative z-10">
+        <span className="text-[9px] font-mono text-white/30 group-hover:text-white/65 transition-colors duration-300 tracking-widest block mb-3">
+          {label}
+        </span>
+        <p className="text-sm md:text-base text-white/80 leading-relaxed font-sans font-medium">
+          {text}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const scrollRef = useRef(0);
 
+  const sectionMouseX = useMotionValue(0);
+  const sectionMouseY = useMotionValue(0);
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    sectionMouseX.set(e.clientX - rect.left);
+    sectionMouseY.set(e.clientY - rect.top);
   };
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
+
+  // Calculate parallax offsets for background blobs
+  const blobY1 = useTransform(scrollYProgress, [0, 1], [-180, 180]);
+  const blobY2 = useTransform(scrollYProgress, [0, 1], [180, -180]);
+  const blobRotation = useTransform(scrollYProgress, [0, 1], [0, 180]);
 
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     scrollRef.current = latest;
@@ -28,11 +140,78 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-full overflow-hidden select-text bg-transparent flex items-center justify-center min-h-screen py-24 px-6 md:px-12 lg:px-20"
+      className="relative w-full overflow-hidden select-text bg-transparent flex items-center justify-center min-h-screen py-24 px-6 md:px-12 lg:px-20 group/section"
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* 3D Backdrop Canvas */}
       <About3D mouse={mouseRef} scrollProgress={scrollRef} />
+
+      {/* Floating Parallax Background Blobs */}
+      <motion.div
+        style={{ y: blobY1, rotate: blobRotation }}
+        className="absolute -top-[10%] -left-[10%] w-[45vw] h-[45vw] rounded-full bg-primary/10 blur-[130px] z-0 pointer-events-none"
+      />
+      <motion.div
+        style={{ y: blobY2 }}
+        className="absolute -bottom-[15%] -right-[15%] w-[40vw] h-[40vw] rounded-full bg-secondary/10 blur-[120px] z-0 pointer-events-none"
+      />
+
+      {/* ── Background Custom Spotlight & Follower Reticle ── */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-700 hidden md:block"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${sectionMouseX}px ${sectionMouseY}px,
+              rgba(147, 51, 234, 0.05),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      <motion.div
+        className="pointer-events-none absolute w-56 h-56 z-0 hidden md:block"
+        style={{
+          left: sectionMouseX,
+          top: sectionMouseY,
+          transform: 'translate(-50%, -50%)',
+          opacity: isHovered ? 1 : 0,
+        }}
+      >
+        {/* Radar concentric circular scan lines */}
+        <div className="absolute inset-0 border border-white/5 rounded-full" />
+        <div className="absolute inset-10 border border-dashed border-sky-500/10 rounded-full animate-spin" style={{ animationDuration: '24s' }} />
+        <div className="absolute inset-20 border border-white/5 rounded-full animate-spin" style={{ animationDuration: '18s', animationDirection: 'reverse' }} />
+
+        {/* Orbiting HUD satellite indicators */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0"
+        >
+          {/* A small dot orbiter */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-purple-500/50 shadow-[0_0_8px_rgba(168,85,247,0.5)] animate-pulse" />
+        </motion.div>
+
+        <motion.div 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0"
+        >
+          {/* A small bracket orbiter */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[8px] font-sans font-bold text-sky-400/40 select-none leading-none">
+            [+]
+          </div>
+        </motion.div>
+
+        {/* Fine crosshair lines */}
+        <div className="absolute top-1/2 left-0 right-0 h-[0.5px] bg-white/[0.03]" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-[0.5px] bg-white/[0.03]" />
+      </motion.div>
 
       {/* Main grid */}
       <div className="relative z-10 w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
@@ -191,29 +370,22 @@ export default function About() {
               ),
             },
           ].map((item, idx) => (
-            <motion.div
+            <AboutCard
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 * idx }}
-              className={`p-6 rounded-xl border border-white/5 bg-zinc-950/25 hover:bg-zinc-950/45 backdrop-blur-md transition-all duration-300 group ${item.color} hover:shadow-[0_0_25px_rgba(59,130,246,0.06)]`}
-            >
-              <span className="text-[9px] font-mono text-white/30 group-hover:text-white/65 transition-colors duration-300 tracking-widest block mb-3">
-                {item.label}
-              </span>
-              <p className="text-sm md:text-base text-white/80 leading-relaxed font-sans font-medium">
-                {item.text}
-              </p>
-            </motion.div>
+              id={item.id}
+              label={item.label}
+              color={item.color}
+              text={item.text}
+              idx={idx}
+            />
           ))}
         </motion.div>
 
       </div>
 
       {/* Screen edge fades */}
-      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black to-transparent pointer-events-none z-10" />
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent pointer-events-none z-10" />
+      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
     </section>
   );
 }

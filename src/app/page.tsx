@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import DoorTransitionWrapper from '@/components/DoorTransitionWrapper';
 import dynamic from 'next/dynamic';
 import LazySection from '@/components/LazySection';
+import ScrollReveal from '@/components/ScrollReveal';
 
 // Dynamically import below-the-fold components with SSR disabled to optimize chunk size and execution time
 const Experience = dynamic(() => import('@/components/Experience'), { ssr: false });
@@ -30,51 +31,65 @@ export default function Home() {
         <main className="flex-1">
           <Hero />
           
-          <div>
-            <About />
-          </div>
+          <ScrollReveal>
+            <div>
+              <About />
+            </div>
+          </ScrollReveal>
           
-          <div id="experience">
-            <LazySection fallbackHeight="min-h-[600px]">
-              <Experience />
+          <ScrollReveal>
+            <div id="experience">
+              <LazySection fallbackHeight="min-h-[600px]">
+                <Experience />
+              </LazySection>
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal>
+            <div id="projects">
+              <LazySection fallbackHeight="min-h-[800px]">
+                <Projects />
+              </LazySection>
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal>
+            <div id="skills">
+              <Skills />
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal>
+            <div id="achievements">
+              <LazySection fallbackHeight="min-h-[500px]">
+                <Achievements />
+              </LazySection>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <LazySection fallbackHeight="min-h-[400px]">
+              <CommunityImpact />
             </LazySection>
-          </div>
-          
-          <div id="projects">
-            <LazySection fallbackHeight="min-h-[800px]">
-              <Projects />
-            </LazySection>
-          </div>
-          
-          <div id="skills">
-            <Skills />
-          </div>
-          
-          <div id="achievements">
+          </ScrollReveal>
+
+          <ScrollReveal>
             <LazySection fallbackHeight="min-h-[500px]">
-              <Achievements />
+              <TechnicalWriting />
             </LazySection>
-          </div>
+          </ScrollReveal>
 
-          <LazySection fallbackHeight="min-h-[400px]">
-            <CommunityImpact />
-          </LazySection>
-
-          <LazySection fallbackHeight="min-h-[500px]">
-            <TechnicalWriting />
-          </LazySection>
-
-          <div id="contact">
-            <LazySection fallbackHeight="min-h-[600px]">
-              <Contact />
-            </LazySection>
-          </div>
+          <ScrollReveal>
+            <div id="contact">
+              <LazySection fallbackHeight="min-h-[600px]">
+                <Contact />
+              </LazySection>
+            </div>
+          </ScrollReveal>
         </main>
 
         {/* Floating Chatbot Assistant */}
-        <LazySection fallbackHeight="h-0">
-          <AskAkashAI />
-        </LazySection>
+        <AskAkashAI />
 
         {/* Page Footer */}
         <Footer />
