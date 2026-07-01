@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useAnimation } from '@/context/AnimationContext';
 
@@ -88,9 +88,20 @@ interface About3DProps {
 
 export default function About3D({ mouse, scrollProgress }: About3DProps) {
   const { isLowEndDevice } = useAnimation();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // If client is a low-end device, bypass WebGL Canvas to save CPU/GPU performance
-  if (isLowEndDevice) {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // If client is a low-end device or on mobile, bypass WebGL Canvas to save CPU/GPU performance
+  if (isLowEndDevice || isMobile) {
     return <LowEndFallback />;
   }
 

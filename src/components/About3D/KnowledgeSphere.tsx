@@ -172,7 +172,7 @@ function NodeMesh({
           document.body.style.cursor = 'pointer';
           setHoveredNode(node.id);
         }}
-        onPointerOut={(e) => {
+        onPointerOut={() => {
           document.body.style.cursor = 'default';
           setHoveredNode(null);
         }}

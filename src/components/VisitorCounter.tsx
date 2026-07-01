@@ -4,14 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 
 export default function VisitorCounter() {
-  const [count, setCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    const key = 'akashportfolio_satpute_unique_visits_counter';
+  const [count, setCount] = useState<number | null>(() => {
+    if (typeof window === 'undefined') return null;
     const storageKey = 'akashportfolio_visited_session';
     const localCountKey = 'akashportfolio_local_visitor_count';
-    
-    // Base visitor count seed so it starts at a realistic number
     const BASE_SEED = 500;
 
     const hasVisited = sessionStorage.getItem(storageKey);
@@ -23,9 +19,16 @@ export default function VisitorCounter() {
       sessionStorage.setItem(storageKey, 'true');
     }
 
-    // Set fallback count first so UI has something to show immediately
-    setCount(BASE_SEED + localCountVal);
+    return BASE_SEED + localCountVal;
+  });
 
+  useEffect(() => {
+    const key = 'akashportfolio_satpute_unique_visits_counter';
+    const storageKey = 'akashportfolio_visited_session';
+    const BASE_SEED = 500;
+
+    const hasVisited = sessionStorage.getItem(storageKey);
+    
     // Try to fetch from the free CountAPI
     const endpoint = hasVisited
       ? `https://countapi.mileshilliard.com/api/v1/get/${key}`

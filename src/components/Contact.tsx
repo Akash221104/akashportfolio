@@ -40,7 +40,7 @@ export default function Contact() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setIsSuccess(true);
       setFormState({ name: '', email: '', subject: '', message: '' });
-    } catch (err) {
+    } catch {
       setErrorMsg('An error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
@@ -69,7 +69,7 @@ export default function Contact() {
             className="w-12 h-1 bg-primary rounded-full mb-4"
           />
           <p className="text-muted text-sm max-w-sm">
-            Let's build something impactful together.
+            Let&apos;s build something impactful together.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function Contact() {
             <Card className="flex-1 flex flex-col justify-between border-border bg-card">
               <div>
                 <h3 className="text-lg font-display font-bold text-white mb-3">
-                  Let's Connect
+                  Let&apos;s Connect
                 </h3>
                 <p className="text-sm text-muted leading-relaxed mb-6">
                   Have an exciting project opportunity, internship opening, research proposal, or just want to chat about generative AI and developer communities? Drop a message!

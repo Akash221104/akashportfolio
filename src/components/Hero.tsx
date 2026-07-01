@@ -10,7 +10,7 @@ import { useAnimation } from '@/context/AnimationContext';
 
 
 export default function Hero() {
-  const { isIntroActive, isDoorOpeningStarted, isIntroComplete } = useAnimation();
+  const { isIntroActive, isDoorOpeningStarted } = useAnimation();
   const shouldAnimate = !isIntroActive;
   const { scrollY } = useScroll();
   const videoOpacity = useTransform(scrollY, [0, 600], [1, 0]);
@@ -38,11 +38,13 @@ export default function Hero() {
           muted
           loop
           playsInline
-          preload="auto"
-          poster="/hero_fallback_bg.png"
+          preload="metadata"
+          poster="/hero-poster.webp"
           className="w-full h-full object-cover opacity-60 md:opacity-75 block"
         >
-          <source src="/hero-bg.mp4" type="video/mp4" />
+          <source src="/hero-bg-480.webm" type="video/webm" media="(max-width: 768px)" />
+          <source src="/hero-bg-720.webm" type="video/webm" />
+          <source src="/hero-bg-720.mp4" type="video/mp4" />
         </video>
       </motion.div>
 

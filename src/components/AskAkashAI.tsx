@@ -50,6 +50,7 @@ export default function AskAkashAI() {
     if (!text.trim()) return;
 
     const userMsg: Message = {
+      // eslint-disable-next-line react-hooks/purity
       id: Math.random().toString(),
       sender: 'user',
       text: text.trim(),
@@ -63,6 +64,7 @@ export default function AskAkashAI() {
     try {
       const response = await askAkashAgent(text);
       const botMsg: Message = {
+        // eslint-disable-next-line react-hooks/purity
         id: Math.random().toString(),
         sender: 'bot',
         text: response.answer,
@@ -72,6 +74,7 @@ export default function AskAkashAI() {
       setSuggestions(response.suggestions);
     } catch {
       const errorMsg: Message = {
+        // eslint-disable-next-line react-hooks/purity
         id: Math.random().toString(),
         sender: 'bot',
         text: "I'm sorry, I encountered an error processing your query. Please try again.",

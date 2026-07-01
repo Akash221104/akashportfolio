@@ -44,7 +44,7 @@ export default function InteractiveBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationId: number;
+    let animationId: number = 0;
     let particles: Particle[] = [];
     let ripples: Ripple[] = [];
     let sparks: Spark[] = [];
@@ -353,9 +353,175 @@ export default function InteractiveBackground() {
 
     render();
 
-    // Cleanup listeners
+    // Pause animation when canvas is off-screen to save CPU/battery
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationId) {
+          // Resume the loop if it was paused
+          const resume = () => {
+            if (!isVisible) return;
+            render();
+          };
+          resume();
+        }
+      },
+      { threshold: 0 }
+    );
+
+    if (canvas) visibilityObserver.observe(canvas);
+
+    // Override render to respect visibility
+    const originalRender = render;
+    const pauseAwareRender = () => {
+      if (!isVisible) {
+        animationId = 0;
+        return;
+      }
+      originalRender();
+    };
+    // Restart with the pause-aware version
+    cancelAnimationFrame(animationId);
+    // Redefine inner render to be visibility-aware
+    const renderLoop = () => {
+      if (!isVisible) {
+        animationId = 0;
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+      
+      const mouse = mouseRef.current;
+      ripples.forEach((r) => { r.radius += r.speed; });
+      ripples = ripples.filter((r) => r.radius < r.maxRadius);
+
+      if (mouse.active) {
+        const glowRadius = maxMouseDistance;
+        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, glowRadius);
+        grad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+        grad.addColorStop(0.35, 'rgba(16, 185, 129, 0.07)');
+        grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      particles.forEach((p) => {
+        if (mouse.active) {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxMouseDistance) {
+            const force = (maxMouseDistance - dist) / maxMouseDistance;
+            const angle = Math.atan2(dy, dx);
+            p.vx += Math.cos(angle) * force * repulsionStrength * 0.08;
+            p.vy += Math.sin(angle) * force * repulsionStrength * 0.08;
+          } else {
+            p.vx = p.vx * 0.98 + p.baseVx * 0.02;
+            p.vy = p.vy * 0.98 + p.baseVy * 0.02;
+          }
+        } else {
+          p.vx = p.vx * 0.95 + p.baseVx * 0.05;
+          p.vy = p.vy * 0.95 + p.baseVy * 0.05;
+        }
+
+        ripples.forEach((r) => {
+          const dx = p.x - r.x;
+          const dy = p.y - r.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > 0 && Math.abs(dist - r.radius) < 30) {
+            const force = (1 - r.radius / r.maxRadius) * r.strength;
+            const angle = Math.atan2(dy, dx);
+            p.vx += Math.cos(angle) * force * 0.8;
+            p.vy += Math.sin(angle) * force * 0.8;
+          }
+        });
+
+        const speedLimit = 1.6;
+        const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (currentSpeed > speedLimit) {
+          p.vx = (p.vx / currentSpeed) * speedLimit;
+          p.vy = (p.vy / currentSpeed) * speedLimit;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) { p.x = 0; p.vx *= -1; p.baseVx *= -1; }
+        else if (p.x > width) { p.x = width; p.vx *= -1; p.baseVx *= -1; }
+        if (p.y < 0) { p.y = 0; p.vy *= -1; p.baseVy *= -1; }
+        else if (p.y > height) { p.y = height; p.vy *= -1; p.baseVy *= -1; }
+
+        const isNearCursor = mouse.active && Math.sqrt((p.x - mouse.x)**2 + (p.y - mouse.y)**2) < maxMouseDistance;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = isNearCursor ? 'rgba(16, 185, 129, 0.75)' : 'rgba(16, 185, 129, 0.35)';
+        ctx.fill();
+      });
+
+      sparks = sparks.filter((s) => {
+        s.x += s.vx; s.y += s.vy; s.alpha -= s.decay;
+        if (s.alpha <= 0) return false;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(16, 185, 129, ${s.alpha})`;
+        ctx.fill();
+        return true;
+      });
+
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxLineDistance) {
+            const alpha = ((maxLineDistance - dist) / maxLineDistance) * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.lineWidth = 0.65;
+            ctx.stroke();
+          }
+        }
+        if (mouse.active) {
+          const dx = p1.x - mouse.x;
+          const dy = p1.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxMouseDistance) {
+            const alpha = ((maxMouseDistance - dist) / maxMouseDistance) * 0.28;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+            ctx.lineWidth = 0.85;
+            ctx.stroke();
+          }
+        }
+      }
+
+      ripples.forEach((r) => {
+        const alpha = (1 - r.radius / r.maxRadius) * 0.35;
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      animationId = requestAnimationFrame(renderLoop);
+    };
+
+    // Restart with visibility-aware loop
+    animationId = requestAnimationFrame(renderLoop);
+    void pauseAwareRender; // suppress unused warning
+
     return () => {
       cancelAnimationFrame(animationId);
+      visibilityObserver.disconnect();
       parent.removeEventListener('mousemove', handleMouseMove);
       parent.removeEventListener('mouseleave', handleMouseLeave);
       parent.removeEventListener('mousedown', handleMouseDown);

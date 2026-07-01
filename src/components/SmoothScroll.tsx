@@ -11,7 +11,12 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Initialize Lenis
+    // Skip Lenis on touch/mobile devices — native scroll feels better and
+    // avoids ~14 KB parse cost on devices that don't benefit from smooth-wheel override
+    const isTouchDevice = navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return;
+
+    // Initialize Lenis (desktop only)
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth easeOutExpo
@@ -41,13 +46,14 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     }
 
     // Connect Lenis to window for global access if needed
-    (window as any).lenis = lenis;
+    (window as unknown as { lenis: Lenis | null }).lenis = lenis;
 
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
-      (window as any).lenis = null;
+      (window as unknown as { lenis: Lenis | null }).lenis = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Control scrolling based on intro state changes

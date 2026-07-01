@@ -2,17 +2,19 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useMotionTemplate } from 'framer-motion';
-import About3D from './About3D';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const About3D = dynamic(() => import('./About3D'), { ssr: false });
 
 interface AboutCardProps {
-  id: string;
   label: string;
   color: string;
   text: React.ReactNode;
   idx: number;
 }
 
-function AboutCard({ id, label, color, text, idx }: AboutCardProps) {
+function AboutCard({ label, color, text, idx }: AboutCardProps) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -238,10 +240,12 @@ export default function About() {
             <div className="absolute -inset-[2px] rounded-full bg-gradient-to-tr from-sky-400 via-blue-500 to-purple-500" />
             {/* Photo */}
             <div className="relative w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 lg:w-64 lg:h-64 rounded-full overflow-hidden bg-zinc-900">
-              <img
-                src="/akash photo.png"
+              <Image
+                src="/akash-photo.webp"
                 alt="Akash Satpute"
-                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                fill
+                sizes="(max-width: 640px) 176px, (max-width: 768px) 208px, (max-width: 1024px) 240px, 256px"
+                className="object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
             {/* Status badge */}
@@ -254,7 +258,7 @@ export default function About() {
           {/* ── Heading ── */}
           <div className="space-y-3 text-center lg:text-left mt-4">
             <span className="text-[10px] font-mono text-purple-400 tracking-[0.3em] font-bold uppercase block">
-              // PROFILE_OVERVIEW
+              {"// PROFILE_OVERVIEW"}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-black text-white tracking-wider uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
               About{' '}
@@ -372,7 +376,6 @@ export default function About() {
           ].map((item, idx) => (
             <AboutCard
               key={item.id}
-              id={item.id}
               label={item.label}
               color={item.color}
               text={item.text}

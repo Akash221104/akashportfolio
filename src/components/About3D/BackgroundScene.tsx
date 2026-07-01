@@ -1,4 +1,6 @@
 'use client';
+'use no memo';
+/* eslint-disable react-hooks/purity, react-hooks/immutability */
 
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
@@ -83,7 +85,7 @@ function NeuralNetwork({ scrollProgress }: { scrollProgress: React.MutableRefObj
   const lineSegmentsRef = useRef<THREE.LineSegments>(null!);
   const pointsRef = useRef<THREE.Points>(null!);
 
-  const { nodePositions, geometryPoints, geometryLines } = useMemo(() => {
+  const { geometryPoints, geometryLines } = useMemo(() => {
     const posArray = new Float32Array(NEURAL_NODE_COUNT * 3);
     for (let i = 0; i < NEURAL_NODE_COUNT; i++) {
       const theta = Math.random() * Math.PI * 2;
@@ -114,7 +116,7 @@ function NeuralNetwork({ scrollProgress }: { scrollProgress: React.MutableRefObj
     geoLines.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     geoLines.setIndex(lineIndices);
 
-    return { nodePositions: posArray, geometryPoints: geoPoints, geometryLines: geoLines };
+    return { geometryPoints: geoPoints, geometryLines: geoLines };
   }, []);
 
   useFrame((state) => {

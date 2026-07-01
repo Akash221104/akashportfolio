@@ -140,7 +140,7 @@ export default function TechnicalWriting() {
         {/* Bottom Quote */}
         <div className="flex justify-center border-t border-border/40 pt-8">
           <p className="text-sm italic font-medium text-muted/80 text-center font-display">
-            "Learning is valuable. Sharing that learning creates impact."
+            &ldquo;Learning is valuable. Sharing that learning creates impact.&rdquo;
           </p>
         </div>
       </div>

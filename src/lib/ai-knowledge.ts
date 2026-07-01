@@ -123,7 +123,6 @@ export async function askAkashAgent(query: string): Promise<KnowledgeResponse> {
 
   // Intent 1: C-DAC
   if (normalized.includes('c-dac') || normalized.includes('cdac')) {
-    const cdac = KNOWLEDGE_BASE.experience.find(e => e.company.includes('C-DAC'));
     return {
       answer: `Akash worked as a **Project Intern** at **C-DAC** (Centre for Development of Advanced Computing) for 2025–2026. During this internship, he:
 • Built intelligent **RAG-based AI chatbot systems**
@@ -137,7 +136,6 @@ export async function askAkashAgent(query: string): Promise<KnowledgeResponse> {
 
   // Intent 2: Physics Wallah
   if (normalized.includes('physics wallah') || normalized.includes('pw')) {
-    const pw = KNOWLEDGE_BASE.experience.find(e => e.company.includes('Physics Wallah'));
     return {
       answer: `Akash worked as a **Product Development Intern** at **Physics Wallah** from Nov 2024 to Feb 2025. His achievements there include:
 • Developing healthcare POCs (Proof of Concepts) and scalable solutions.
@@ -161,7 +159,6 @@ export async function askAkashAgent(query: string): Promise<KnowledgeResponse> {
   // Intent 4: Projects (General or Specific)
   if (normalized.includes('project') || normalized.includes('built') || normalized.includes('portfolio') || normalized.includes('coursecrafter') || normalized.includes('medicine') || normalized.includes('rag') || normalized.includes('retail')) {
     if (normalized.includes('coursecrafter')) {
-      const proj = KNOWLEDGE_BASE.projects[0];
       return {
         answer: `**CourseCrafter** is an AI-powered learning platform built with **Next.js, Node.js, AI, and the YouTube API**.
 It generates personalized learning paths based on YouTube contents and incorporates intelligent ranking and difficulty-based recommendations.`,
@@ -169,7 +166,6 @@ It generates personalized learning paths based on YouTube contents and incorpora
       };
     }
     if (normalized.includes('medicine') || normalized.includes('recommendation')) {
-      const proj = KNOWLEDGE_BASE.projects[1];
       return {
         answer: `The **Medicine Recommendation System** is a machine learning project written in **Python (Scikit-learn)**.
 It predicts potential diseases from symptoms input by users and provides recommendations for medicines, diets, and workouts.`,
@@ -177,7 +173,6 @@ It predicts potential diseases from symptoms input by users and provides recomme
       };
     }
     if (normalized.includes('rag chatbot') || normalized.includes('chatbot') || normalized.includes('rag ai')) {
-      const proj = KNOWLEDGE_BASE.projects[2];
       return {
         answer: `The **RAG AI Chatbot** is an enterprise-style Retrieval-Augmented Generation chatbot developed by Akash during his C-DAC internship.
 It features:
@@ -189,7 +184,6 @@ It features:
       };
     }
     if (normalized.includes('retail') || normalized.includes('decision assistant')) {
-      const proj = KNOWLEDGE_BASE.projects[3];
       return {
         answer: `The **Smart Retail Decision Assistant** is a data analytics platform developed in **Python and SQL** to assist retail businesses in optimizing pricing and inventory strategies through data-driven insights.`,
         suggestions: ['What AI projects has Akash built?', 'What technologies does Akash work with?']
@@ -238,7 +232,6 @@ It features:
 
   // Intent 7: Education
   if (normalized.includes('education') || normalized.includes('college') || normalized.includes('university') || normalized.includes('degree') || normalized.includes('gpa') || normalized.includes('pillai')) {
-    const edu = KNOWLEDGE_BASE.education;
     return {
       answer: `Akash is pursuing a **Bachelor of Technology (B.Tech)** in **Computer Engineering** at **Pillai College of Engineering** (2022–2026).
 He maintains an excellent academic record with a CGPA of **8.9+** out of 10.`,
@@ -248,7 +241,7 @@ He maintains an excellent academic record with a CGPA of **8.9+** out of 10.`,
 
   // Intent 8: Contact / Hire
   if (normalized.includes('contact') || normalized.includes('email') || normalized.includes('hire') || normalized.includes('linkedin') || normalized.includes('reach') || normalized.includes('phone') || normalized.includes('call') || normalized.includes('whatsapp')) {
-    const p = KNOWLEDGE_BASE.personal as any; // Type assertions for custom fields
+    const p = KNOWLEDGE_BASE.personal; // Type-safe reference without any
     return {
       answer: `You can reach out to Akash via:
 • **Email**: [${p.email}](mailto:${p.email})

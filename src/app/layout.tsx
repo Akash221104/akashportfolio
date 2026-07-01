@@ -8,16 +8,17 @@ import Script from "next/script";
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "700", "800"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://akashsatpute.dev"),
   title: {
     default: "Akash Satpute | AI Engineer & Full Stack Developer",
     template: "%s | Akash Satpute"
@@ -80,18 +81,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} ${inter.variable} h-full antialiased`}>
       <head>
-        <link
-          rel="preload"
-          href="/OPENING.webm"
-          as="video"
-          type="video/webm"
-        />
-        <link
-          rel="preload"
-          href="/hero-bg.mp4"
-          as="video"
-          type="video/mp4"
-        />
+        {/* Preload hero poster image early so LCP is not delayed by video element discovery */}
+        <link rel="preload" as="image" href="/hero-poster.webp" fetchPriority="high" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <Providers>

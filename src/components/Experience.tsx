@@ -11,7 +11,6 @@ import {
   Zap,
   Users,
   Globe,
-  ArrowRight,
   FileJson,
   Terminal,
   Settings,
@@ -155,7 +154,6 @@ function ExperienceFileNode({
   isHovered,
   onHover,
   onClick,
-  idx,
   isLast,
 }: {
   exp: (typeof experiences)[0];
@@ -163,7 +161,6 @@ function ExperienceFileNode({
   isHovered: boolean;
   onHover: (hovered: boolean) => void;
   onClick: () => void;
-  idx: number;
   isLast: boolean;
 }) {
   const FileIcon = exp.fileType === 'json' ? FileJson : exp.fileType === 'log' ? Terminal : exp.fileType === 'conf' ? Settings : Key;
@@ -693,7 +690,6 @@ export default function Experience() {
                           isHovered={hoveredId === exp.id}
                           onHover={(hovered) => setHoveredId(hovered ? exp.id : null)}
                           onClick={() => setActiveId(exp.id)}
-                          idx={idx}
                           isLast={isLast}
                         />
                       );
@@ -717,22 +713,22 @@ export default function Experience() {
                     <div>
                       <span className="text-white/20 select-none mr-2">01</span>
                       <span className="text-[#569cd6]">role_type:</span>{' '}
-                      <span className="text-[#ce9178]">"{activeExp.roleType}"</span>
+                      <span className="text-[#ce9178]">&quot;{activeExp.roleType}&quot;</span>
                     </div>
                     <div>
                       <span className="text-white/20 select-none mr-2">02</span>
                       <span className="text-[#569cd6]">status:</span>{' '}
-                      <span className="text-emerald-400">"{activeExp.status}"</span>
+                      <span className="text-emerald-400">&quot;{activeExp.status}&quot;</span>
                     </div>
                     <div className="flex justify-between">
                       <div>
                         <span className="text-white/20 select-none mr-2">03</span>
                         <span className="text-[#569cd6]">location:</span>{' '}
-                        <span className="text-[#ce9178]">"{activeExp.location}"</span>
+                        <span className="text-[#ce9178]">&quot;{activeExp.location}&quot;</span>
                       </div>
                       <div>
                         <span className="text-[#569cd6]">verification:</span>{' '}
-                        <span className="text-white/60">"{activeExp.verification}"</span>
+                        <span className="text-white/60">&quot;{activeExp.verification}&quot;</span>
                       </div>
                     </div>
                   </div>

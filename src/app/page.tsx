@@ -3,15 +3,15 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Skills from '@/components/Skills';
 import Footer from '@/components/Footer';
 import DoorTransitionWrapper from '@/components/DoorTransitionWrapper';
 import dynamic from 'next/dynamic';
 import LazySection from '@/components/LazySection';
 import ScrollReveal from '@/components/ScrollReveal';
 
-// Dynamically import below-the-fold components with SSR disabled to optimize chunk size and execution time
+// Dynamically import ALL below-the-fold components to minimize initial JS bundle
+const About = dynamic(() => import('@/components/About'), { ssr: false });
+const Skills = dynamic(() => import('@/components/Skills'), { ssr: false });
 const Experience = dynamic(() => import('@/components/Experience'), { ssr: false });
 const Projects = dynamic(() => import('@/components/Projects'), { ssr: false });
 const Achievements = dynamic(() => import('@/components/Achievements'), { ssr: false });
@@ -32,8 +32,10 @@ export default function Home() {
           <Hero />
           
           <ScrollReveal>
-            <div>
-              <About />
+            <div id="about">
+              <LazySection fallbackHeight="min-h-[600px]">
+                <About />
+              </LazySection>
             </div>
           </ScrollReveal>
           
@@ -55,7 +57,9 @@ export default function Home() {
           
           <ScrollReveal>
             <div id="skills">
-              <Skills />
+              <LazySection fallbackHeight="min-h-[400px]">
+                <Skills />
+              </LazySection>
             </div>
           </ScrollReveal>
           

@@ -31,11 +31,11 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
       if (cores && cores < 4) return true;
 
       // Low RAM (in GB)
-      const memory = (navigator as any).deviceMemory;
+      const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
       if (memory && memory < 4) return true;
 
       // Save Data mode or 2g/3g connections
-      const conn = (navigator as any).connection;
+      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
       if (conn) {
         if (conn.saveData) return true;
         const type = conn.effectiveType;
@@ -47,7 +47,7 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         if (!gl) return true;
-      } catch (e) {
+      } catch {
         return true;
       }
 
@@ -55,6 +55,7 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
     };
 
     const lowEnd = detectLowEnd();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLowEndDevice(lowEnd);
 
     // 2. Query/Session check
