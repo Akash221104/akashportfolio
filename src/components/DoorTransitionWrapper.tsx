@@ -19,6 +19,7 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
 
   const [isFadingOut, setIsFadingOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
   // Physics simulation state
@@ -152,8 +153,38 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
         }
       }
 
-      // Trigger Hero reveal after 10% progress threshold
-      if (progress > 0.1 && !isDoorOpeningStarted) {
+      // Draw and apply chroma key filtering to the canvas in real-time
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          // Keep native video dimensions to preserve 100% video quality
+          if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+            canvas.width = video.videoWidth || window.innerWidth;
+            canvas.height = video.videoHeight || window.innerHeight;
+          }
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          try {
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i];
+              const g = data[i + 1];
+              const b = data[i + 2];
+              // Chroma key algorithm: if green channel is dominant, make it transparent
+              if (g > 80 && g - r > 30 && g - b > 30) {
+                data[i + 3] = 0; // Alpha = 0
+              }
+            }
+            ctx.putImageData(imgData, 0, 0);
+          } catch (e) {
+            // Safe fallback
+          }
+        }
+      }
+
+      // Trigger Hero reveal when the door starts opening in the video (around 45% progress)
+      if (progress > 0.45 && !isDoorOpeningStarted) {
         startDoorOpening();
       }
 
@@ -185,7 +216,7 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
           transform: isIntroActive ? (isDoorOpeningStarted ? 'scale(1)' : 'scale(0.95)') : 'none',
           opacity: isIntroActive ? (isDoorOpeningStarted ? 1 : 0) : 1,
           filter: isIntroActive ? (isDoorOpeningStarted ? 'none' : 'blur(10px)') : 'none',
-          transition: isIntroActive ? 'transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+          transition: isIntroActive ? 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease-out, filter 0.6s ease-out' : 'none',
           pointerEvents: isIntroComplete ? 'auto' : 'none',
           willChange: isIntroActive ? 'transform, opacity, filter' : 'auto',
         }}
@@ -203,7 +234,7 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
             pointerEvents: isFadingOut ? 'none' : 'auto',
           }}
         >
-          {/* Native Transparent Video (scrubbed programmatically) */}
+          {/* Native source video (scrubbed programmatically, hidden from view) */}
           <video
             ref={videoRef}
             src="/OPENING.webm"
@@ -214,6 +245,12 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
               console.error('Door Transition: Video loading error:', e);
               skipIntro();
             }}
+            style={{ display: 'none' }}
+          />
+
+          {/* Real-time Chroma-Keyed Canvas Output */}
+          <canvas
+            ref={canvasRef}
             style={{
               position: 'absolute',
               top: 0,
