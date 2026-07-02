@@ -329,7 +329,7 @@ function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
       >
         <Card
           hoverGlow={false}
-          className="transition-all duration-500 border-white/5 bg-[#030307]/75 backdrop-blur-xl relative overflow-hidden p-6 md:p-8 flex flex-col justify-between h-full min-h-[440px] select-text"
+          className="transition-all duration-500 border-white/5 bg-[#030307]/75 backdrop-blur-xl relative overflow-hidden p-4 sm:p-5 md:p-8 flex flex-col justify-between h-full min-h-[320px] md:min-h-[440px] select-text"
           style={{
             boxShadow: `0 20px 50px -10px rgba(${exp.colorRgb}, 0.12), inset 0 0 0 1px rgba(${exp.colorRgb}, 0.25)`,
             borderColor: exp.color,
@@ -379,16 +379,16 @@ function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
             <div>
               {/* Card Header */}
               <motion.div variants={itemVariants} className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-center gap-3.5">
+                <div className="flex items-center gap-3 md:gap-3.5">
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center border transition-all duration-300"
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center border transition-all duration-300"
                     style={{
                       borderColor: `rgba(${exp.colorRgb}, 0.25)`,
                       background: `rgba(${exp.colorRgb}, 0.12)`,
                       boxShadow: `0 0 16px rgba(${exp.colorRgb}, 0.2)`,
                     }}
                   >
-                    <exp.icon className="w-6 h-6" style={{ color: exp.color }} />
+                    <exp.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: exp.color }} />
                   </div>
                   <div>
                     <span
@@ -401,34 +401,34 @@ function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
                     >
                       {exp.tag}
                     </span>
-                    <h3 className="text-xl md:text-2xl font-display font-black text-white leading-tight">
+                    <h3 className="text-lg md:text-2xl font-display font-black text-white leading-tight">
                       {exp.position}
                     </h3>
-                    <p className="text-sm font-bold mt-0.5" style={{ color: exp.color }}>
+                    <p className="text-xs md:text-sm font-bold mt-0.5" style={{ color: exp.color }}>
                       {exp.fullOrg}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-[11px] text-white/50 font-mono whitespace-nowrap">
-                  <Calendar className="w-3.5 h-3.5 opacity-70 animate-pulse" style={{ color: exp.color }} />
+                <div className="flex items-center gap-1.5 px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-[10px] md:text-[11px] text-white/50 font-mono whitespace-nowrap">
+                  <Calendar className="w-3 md:w-3.5 h-3 md:h-3.5 opacity-70 animate-pulse" style={{ color: exp.color }} />
                   {exp.duration}
                 </div>
               </motion.div>
 
               {/* Divider */}
-              <motion.div variants={itemVariants} className="h-px bg-white/5 my-5" />
+              <motion.div variants={itemVariants} className="h-px bg-white/5 my-3 md:my-5" />
 
               {/* Highlights */}
-              <motion.ul variants={containerVariants} className="space-y-3.5 pl-1">
+              <motion.ul variants={containerVariants} className="space-y-2 md:space-y-3.5 pl-1">
                 {exp.highlights.map((bullet, idx) => (
                   <motion.li
                     key={idx}
                     variants={itemVariants}
-                    className="flex items-start gap-3.5 text-sm text-white/50 leading-relaxed hover:text-white/75 transition-colors duration-200"
+                    className="flex items-start gap-2.5 md:gap-3.5 text-xs md:text-sm text-white/50 leading-relaxed hover:text-white/75 transition-colors duration-200"
                   >
                     <ChevronRight
-                      className="w-4.5 h-4.5 shrink-0 mt-0.5"
+                      className="w-3.5 h-3.5 md:w-4.5 md:h-4.5 shrink-0 mt-0.5"
                       style={{ color: exp.color }}
                     />
                     <span>{bullet}</span>
@@ -438,14 +438,14 @@ function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
             </div>
 
             {/* Tech stack tags footer */}
-            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-white/5">
+            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-1.5 mt-4 pt-3 border-t border-white/5 md:mt-8 md:pt-4">
               <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest mr-1">
                 Technology Stack:
               </span>
               {exp.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-white/70 text-[10px] font-mono font-medium transition-all hover:bg-white/10 hover:border-white/15"
+                  className="px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg bg-white/5 border border-white/5 text-white/70 text-[9px] md:text-[10px] font-mono font-medium transition-all hover:bg-white/10 hover:border-white/15"
                 >
                   {tech}
                 </span>
@@ -496,13 +496,13 @@ export default function Experience() {
   const handleTimelineNodeClick = (id: string) => {
     setActiveId(id);
     if (scrollContainerRef.current) {
-      const element = scrollContainerRef.current.querySelector(`[data-card-id="${id}"]`);
+      const container = scrollContainerRef.current;
+      const element = container.querySelector(`[data-card-id="${id}"]`) as HTMLElement;
       if (element) {
         isScrollingRef.current = true;
-        element.scrollIntoView({
+        container.scrollTo({
+          left: element.offsetLeft - 24, // accounts for px-6 padding
           behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center',
         });
         setTimeout(() => {
           isScrollingRef.current = false;
@@ -518,10 +518,17 @@ export default function Experience() {
 
     const container = scrollContainerRef.current;
     const scrollLeft = container.scrollLeft;
-    const clientWidth = container.clientWidth;
-    if (clientWidth === 0) return;
+    
+    const firstCard = container.querySelector('[data-card-id]');
+    if (!firstCard) return;
+    
+    const cardWidth = firstCard.clientWidth;
+    const gap = 16; // gap-4 is 16px
+    const step = cardWidth + gap;
+    
+    if (step === 0) return;
 
-    const index = Math.round(scrollLeft / clientWidth);
+    const index = Math.round(scrollLeft / step);
     const targetExp = chronologicalExps[index];
     if (targetExp && targetExp.id !== activeId) {
       setActiveId(targetExp.id);
@@ -595,19 +602,15 @@ export default function Experience() {
 
         {/* Journey Timeline (Reverse Chronological present -> past) */}
         <div 
-          className="w-full mb-16 select-none overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth" 
+          className="w-full mb-8 select-none scroll-smooth" 
           ref={timelineRef}
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-          }}
         >
-          <div className="min-w-[500px] md:min-w-0 md:max-w-4xl mx-auto px-4 relative py-6">
+          <div className="w-full md:max-w-4xl mx-auto px-2 md:px-4 relative py-6">
             {/* Timeline track line */}
-            <div className="absolute left-[12.5%] right-[12.5%] top-[40px] h-[2px] bg-white/10 -translate-y-1/2 z-0" />
+            <div className="absolute left-[12.5%] right-[12.5%] top-[32px] xs:top-[36px] sm:top-[40px] h-[2px] bg-white/10 -translate-y-1/2 z-0" />
             
             {/* Animated Glowing track line */}
-            <div className="absolute left-[12.5%] right-[12.5%] top-[40px] h-[2px] -translate-y-1/2 z-0 overflow-hidden">
+            <div className="absolute left-[12.5%] right-[12.5%] top-[32px] xs:top-[36px] sm:top-[40px] h-[2px] -translate-y-1/2 z-0 overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-[#00f0ff] via-[#a855f7] via-[#3b82f6] to-[#10b981]"
                 style={{
@@ -634,7 +637,7 @@ export default function Experience() {
                   >
                     {/* Year above dot */}
                     <span 
-                      className="text-[10px] sm:text-xs font-mono font-bold mb-2.5 transition-all duration-300 block uppercase tracking-wider whitespace-nowrap"
+                      className="text-[8px] xs:text-[10px] sm:text-xs font-mono font-bold mb-1.5 transition-all duration-300 block uppercase tracking-wider whitespace-nowrap"
                       style={{ 
                         color: isActive ? exp.color : 'rgba(255,255,255,0.3)',
                         textShadow: isActive ? `0 0 8px ${exp.color}40` : 'none'
@@ -646,14 +649,14 @@ export default function Experience() {
                     {/* Glowing dot container */}
                     <div className="relative flex items-center justify-center">
                       <div
-                        className="w-6 h-6 rounded-full border-2 flex items-center justify-center bg-[#020205] transition-all duration-500 relative z-10"
+                        className="w-4 h-4 xs:w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center bg-[#020205] transition-all duration-500 relative z-10"
                         style={{
                           borderColor: isActive ? exp.color : 'rgba(255,255,255,0.15)',
                           boxShadow: isActive ? `0 0 14px ${exp.color}` : 'none',
                         }}
                       >
                         <div
-                          className="w-2.5 h-2.5 rounded-full transition-all duration-500"
+                          className="w-1.5 h-1.5 xs:w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-500"
                           style={{
                             backgroundColor: isActive ? exp.color : 'rgba(255,255,255,0.2)',
                           }}
@@ -663,7 +666,7 @@ export default function Experience() {
                       {/* Additional pulse ring when active */}
                       {isActive && (
                         <span 
-                          className="absolute w-10 h-10 rounded-full animate-ping pointer-events-none opacity-20"
+                          className="absolute w-6 h-6 xs:w-8 h-8 sm:w-10 sm:h-10 rounded-full animate-ping pointer-events-none opacity-20"
                           style={{ backgroundColor: exp.color }}
                         />
                       )}
@@ -671,7 +674,7 @@ export default function Experience() {
 
                     {/* Company below dot */}
                     <span 
-                      className="text-[10px] sm:text-xs font-mono font-bold mt-2.5 text-center max-w-[100px] sm:max-w-[120px] transition-all duration-300 block leading-tight"
+                      className="text-[8px] xs:text-[10px] sm:text-xs font-mono font-bold mt-1.5 text-center max-w-[65px] xs:max-w-[85px] sm:max-w-[120px] transition-all duration-300 block leading-tight"
                       style={{ 
                         color: isActive ? '#ffffff' : 'rgba(255,255,255,0.5)',
                         transform: isActive ? 'scale(1.05)' : 'scale(1)'
@@ -852,7 +855,7 @@ export default function Experience() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 px-4 w-full scroll-smooth [&::-webkit-scrollbar]:hidden"
+            className="relative flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-6 w-full scroll-smooth [&::-webkit-scrollbar]:hidden"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -862,7 +865,7 @@ export default function Experience() {
               <div
                 key={exp.id}
                 data-card-id={exp.id}
-                className="w-[85vw] sm:w-[75vw] shrink-0 snap-center"
+                className="w-[80vw] sm:w-[70vw] shrink-0 snap-start"
               >
                 <InteractiveDetailCard exp={exp} />
               </div>
