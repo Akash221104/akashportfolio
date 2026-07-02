@@ -26,7 +26,7 @@ export default function Hero() {
         transition: 'opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1)',
         willChange: 'opacity, filter, transform',
       } : {}}
-      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-28 pb-16 px-6 md:px-12 bg-background"
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-24 pb-12 px-6 md:px-12 bg-background"
     >
       {/* Layer 1: Fullscreen Video Background */}
       <motion.div
@@ -40,7 +40,7 @@ export default function Hero() {
           playsInline
           preload="metadata"
           poster="/hero-poster.webp"
-          className="w-full h-full object-cover opacity-80 md:opacity-90 block"
+          className="w-full h-full object-cover opacity-40 md:opacity-50 block"
         >
           <source src="/hero-bg-480.webm" type="video/webm" media="(max-width: 768px)" />
           <source src="/hero-bg-720.webm" type="video/webm" />
@@ -48,8 +48,8 @@ export default function Hero() {
         </video>
       </motion.div>
 
-      {/* Layer 2: Dark Overlay + Subtle Blur */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px] z-10 pointer-events-none" />
+      {/* Layer 2: Dark Overlay + Subtle Blur (Darkened for contrast) */}
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-[1.5px] z-10 pointer-events-none" />
 
       {/* Layer 3: Bottom Gradient Fade (blends the video background seamlessly into the About section) */}
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-background z-10 pointer-events-none" />
@@ -61,7 +61,7 @@ export default function Hero() {
       {/* Layer 4: Hero Content (using parallax contentY animation) */}
       <motion.div
         style={{ y: contentY }}
-        className="relative z-20 max-w-5xl w-full flex flex-col items-center text-center"
+        className="relative z-20 max-w-5xl w-full flex flex-col items-center text-center mt-6"
       >
         {/* Animated tag */}
         <motion.div
@@ -74,12 +74,17 @@ export default function Hero() {
           Open to Opportunities
         </motion.div>
 
-        {/* Big Headline */}
+        {/* Big 3D extruded Headline */}
         <motion.h1
           initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-6xl md:text-7xl font-display font-bold tracking-tight leading-none mb-6"
+          className="text-4xl sm:text-6xl md:text-8xl font-display font-black tracking-tight leading-none mb-6 text-white"
+          style={{
+            textShadow: '0 1px 0 #1e1b4b, 0 2px 0 #312e81, 0 3px 0 #3730a3, 0 4px 0 #4338ca, 0 5px 0 #4f46e5, 0 6px 0 #6366f1, 1px 8px 12px rgba(99, 102, 241, 0.45), 0 12px 24px rgba(0, 0, 0, 0.8), 0 0 25px rgba(99, 102, 241, 0.25)',
+            transform: 'perspective(500px) rotateX(6deg)',
+            transformStyle: 'preserve-3d',
+          }}
         >
           AKASH SATPUTE
         </motion.h1>
@@ -89,7 +94,7 @@ export default function Hero() {
           initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-sm sm:text-base md:text-lg font-medium text-muted font-display mb-6"
+          className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-sm sm:text-base md:text-lg font-medium text-white/90 font-display mb-6"
         >
           <span>Computer Engineering Student</span>
           <span className="text-border/80 hidden sm:inline">•</span>
@@ -115,7 +120,7 @@ export default function Hero() {
           initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-16"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12"
         >
           <a href="#projects" className="w-full sm:w-auto">
             <Button variant="primary" className="w-full sm:w-auto gap-2">
@@ -147,7 +152,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex items-center gap-8 mb-20"
+          className="flex items-center justify-center gap-8 mb-8"
         >
           {/* LinkedIn */}
           <div className="flex flex-col items-center gap-2 group">
@@ -198,8 +203,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </motion.div>
-
-
     </section>
   );
 }
