@@ -33,10 +33,6 @@ const experiences = [
     tag: 'AI & ML Systems',
     fileName: 'cdac.json',
     fileType: 'json',
-    roleType: 'Internship',
-    status: 'Completed',
-    location: 'Pune (Hybrid)',
-    verification: 'VERIFIED',
     highlights: [
       'Built intelligent RAG-based AI chatbot systems and ingestion frameworks.',
       'Implemented custom vector search pipelines using dense embeddings.',
@@ -59,10 +55,6 @@ const experiences = [
     tag: 'Full Stack Dev',
     fileName: 'physics_wallah.log',
     fileType: 'log',
-    roleType: 'Internship',
-    status: 'Completed',
-    location: 'Noida (Remote)',
-    verification: 'VERIFIED',
     highlights: [
       'Developed responsive healthcare platforms and administrative tools.',
       'Constructed multiple production-ready Proof of Concepts for key features.',
@@ -84,10 +76,6 @@ const experiences = [
     tag: 'Tech Leadership',
     fileName: 'gdg_on_campus.conf',
     fileType: 'conf',
-    roleType: 'Leadership',
-    status: 'Active',
-    location: 'PCE Campus',
-    verification: 'ACTIVE_LEAD',
     highlights: [
       'Managed and mentored a technical core team of 50+ members.',
       'Conceptualized and organized 15+ student workshops, study groups, and hackathons.',
@@ -109,10 +97,6 @@ const experiences = [
     tag: 'Frontend Engineering',
     fileName: 'oasis_infobyte.env',
     fileType: 'env',
-    roleType: 'Internship',
-    status: 'Completed',
-    location: 'Remote',
-    verification: 'VERIFIED',
     highlights: [
       'Built and deployed lightweight, highly responsive client websites.',
       'Iterated on designs to enhance user experience and cross-device usability.',
@@ -176,8 +160,8 @@ function ExperienceFileNode({
           backgroundColor: isActive
             ? exp.color
             : isHovered
-            ? `rgba(${exp.colorRgb}, 0.35)`
-            : 'rgba(255,255,255,0.08)',
+              ? `rgba(${exp.colorRgb}, 0.35)`
+              : 'rgba(255,255,255,0.08)',
         }}
       />
       {/* Horizontal connector segment */}
@@ -187,8 +171,8 @@ function ExperienceFileNode({
           backgroundColor: isActive
             ? exp.color
             : isHovered
-            ? `rgba(${exp.colorRgb}, 0.35)`
-            : 'rgba(255,255,255,0.08)',
+              ? `rgba(${exp.colorRgb}, 0.35)`
+              : 'rgba(255,255,255,0.08)',
         }}
       />
 
@@ -221,7 +205,7 @@ function ExperienceFileNode({
 
         {/* Body content - Stacked Layout to prevent overlaps */}
         <div className="flex flex-col gap-2 relative z-10 w-full min-w-0">
-          
+
           {/* Top Row: Icon + Organization (Left) & Date + Active Indicator (Right) */}
           <div className="flex items-center justify-between w-full gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -290,7 +274,7 @@ function ExperienceFileNode({
 // ─── Module 7: Holographic detail card (Right Column) ──────────────────────
 function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   // States for 3D tilt and mouse flashlight spotlights
   const [flashlight, setFlashlight] = useState({ x: 0, y: 0 });
   const [rotateX, setRotateX] = useState(0);
@@ -302,7 +286,7 @@ function InteractiveDetailCard({ exp }: { exp: (typeof experiences)[0] }) {
     const rect = cardRef.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
-    
+
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     setFlashlight({ x: mouseX, y: mouseY });
@@ -486,15 +470,63 @@ export default function Experience() {
   const [consoleRotateX, setConsoleRotateX] = useState(0);
   const [consoleRotateY, setConsoleRotateY] = useState(0);
 
-  // Ref for right detail panel to enable auto‑scroll on mobile
-  const detailRef = useRef<HTMLDivElement>(null);
+  // Refs for mobile scroll container & timeline container
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
 
-  // Auto‑scroll to detail panel on mobile when active experience changes
+  const chronologicalExps = experiences;
+  const activeIndex = chronologicalExps.findIndex((e) => e.id === activeId);
+
+  // Scroll active timeline node into view when activeId changes
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768 && detailRef.current) {
-      detailRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (timelineRef.current) {
+      const activeNode = timelineRef.current.querySelector(`[data-timeline-id="${activeId}"]`);
+      if (activeNode) {
+        activeNode.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        });
+      }
     }
   }, [activeId]);
+
+  // Handle timeline node clicks
+  const handleTimelineNodeClick = (id: string) => {
+    setActiveId(id);
+    if (scrollContainerRef.current) {
+      const element = scrollContainerRef.current.querySelector(`[data-card-id="${id}"]`);
+      if (element) {
+        isScrollingRef.current = true;
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        });
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 600);
+      }
+    }
+  };
+
+  // Sync scroll of cards on mobile back to timeline
+  const handleScroll = () => {
+    if (isScrollingRef.current) return;
+    if (!scrollContainerRef.current) return;
+
+    const container = scrollContainerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const clientWidth = container.clientWidth;
+    if (clientWidth === 0) return;
+
+    const index = Math.round(scrollLeft / clientWidth);
+    const targetExp = chronologicalExps[index];
+    if (targetExp && targetExp.id !== activeId) {
+      setActiveId(targetExp.id);
+    }
+  };
 
   const handleConsoleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!consoleRef.current) return;
@@ -504,7 +536,7 @@ export default function Experience() {
 
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    
+
     setConsoleGlow({ x: mouseX, y: mouseY });
 
     // Subtle 3D tilt for the left panel (max 3.5 degrees)
@@ -535,9 +567,9 @@ export default function Experience() {
       <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
       <div className="max-w-[1240px] w-full mx-auto px-6 relative z-10">
-        
+
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-16">
+        <div className="flex flex-col items-center text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -561,9 +593,102 @@ export default function Experience() {
           </h2>
         </div>
 
-        {/* Widescreen Dashboard Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-          
+        {/* Journey Timeline (Reverse Chronological present -> past) */}
+        <div 
+          className="w-full mb-16 select-none overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth" 
+          ref={timelineRef}
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
+          <div className="min-w-[500px] md:min-w-0 md:max-w-4xl mx-auto px-4 relative py-6">
+            {/* Timeline track line */}
+            <div className="absolute left-[12.5%] right-[12.5%] top-[40px] h-[2px] bg-white/10 -translate-y-1/2 z-0" />
+            
+            {/* Animated Glowing track line */}
+            <div className="absolute left-[12.5%] right-[12.5%] top-[40px] h-[2px] -translate-y-1/2 z-0 overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-[#00f0ff] via-[#a855f7] via-[#3b82f6] to-[#10b981]"
+                style={{
+                  width: `${(activeIndex / (experiences.length - 1)) * 100}%`,
+                  boxShadow: '0 0 10px rgba(0, 240, 255, 0.5)',
+                }}
+                animate={{
+                  width: `${(activeIndex / (experiences.length - 1)) * 100}%`,
+                }}
+                transition={{ type: 'spring', stiffness: 60, damping: 15 }}
+              />
+            </div>
+
+            {/* Timeline nodes */}
+            <div className="flex justify-between relative z-10">
+              {chronologicalExps.map((exp, idx) => {
+                const isActive = activeId === exp.id;
+                return (
+                  <button
+                    key={exp.id}
+                    data-timeline-id={exp.id}
+                    onClick={() => handleTimelineNodeClick(exp.id)}
+                    className="flex-1 flex flex-col items-center cursor-pointer group outline-none bg-transparent border-none p-0 focus:outline-none"
+                  >
+                    {/* Year above dot */}
+                    <span 
+                      className="text-[10px] sm:text-xs font-mono font-bold mb-2.5 transition-all duration-300 block uppercase tracking-wider whitespace-nowrap"
+                      style={{ 
+                        color: isActive ? exp.color : 'rgba(255,255,255,0.3)',
+                        textShadow: isActive ? `0 0 8px ${exp.color}40` : 'none'
+                      }}
+                    >
+                      {exp.yearRange}
+                    </span>
+
+                    {/* Glowing dot container */}
+                    <div className="relative flex items-center justify-center">
+                      <div
+                        className="w-6 h-6 rounded-full border-2 flex items-center justify-center bg-[#020205] transition-all duration-500 relative z-10"
+                        style={{
+                          borderColor: isActive ? exp.color : 'rgba(255,255,255,0.15)',
+                          boxShadow: isActive ? `0 0 14px ${exp.color}` : 'none',
+                        }}
+                      >
+                        <div
+                          className="w-2.5 h-2.5 rounded-full transition-all duration-500"
+                          style={{
+                            backgroundColor: isActive ? exp.color : 'rgba(255,255,255,0.2)',
+                          }}
+                        />
+                      </div>
+
+                      {/* Additional pulse ring when active */}
+                      {isActive && (
+                        <span 
+                          className="absolute w-10 h-10 rounded-full animate-ping pointer-events-none opacity-20"
+                          style={{ backgroundColor: exp.color }}
+                        />
+                      )}
+                    </div>
+
+                    {/* Company below dot */}
+                    <span 
+                      className="text-[10px] sm:text-xs font-mono font-bold mt-2.5 text-center max-w-[100px] sm:max-w-[120px] transition-all duration-300 block leading-tight"
+                      style={{ 
+                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                        transform: isActive ? 'scale(1.05)' : 'scale(1)'
+                      }}
+                    >
+                      {exp.organization}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Widescreen Dashboard Grid Layout (Desktop only) */}
+        <div className="hidden md:grid grid-cols-12 gap-8 lg:gap-12 items-stretch">
+
           {/* ═══════════════════════════════════════════════════════
                LEFT PANEL: Interactive Control Console (col-span-5)
           ═══════════════════════════════════════════════════════ */}
@@ -697,43 +822,6 @@ export default function Experience() {
                   </div>
                 </div>
 
-                {/* Consolidated Terminal Diagnostic Output at bottom */}
-                <div className="mt-6 relative z-20">
-                  <div className="flex items-center justify-between border-t border-white/5 pt-3.5 mb-2">
-                    <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">
-                      Role details
-                    </span>
-                    <span className="text-[8px] font-mono text-emerald-500/80 uppercase tracking-widest flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      session.log
-                    </span>
-                  </div>
-                  
-                  <div className="bg-black/35 rounded-xl p-3 border border-white/[0.03] font-mono text-[9px] sm:text-[10px] space-y-1 text-white/40">
-                    <div>
-                      <span className="text-white/20 select-none mr-2">01</span>
-                      <span className="text-[#569cd6]">role_type:</span>{' '}
-                      <span className="text-[#ce9178]">&quot;{activeExp.roleType}&quot;</span>
-                    </div>
-                    <div>
-                      <span className="text-white/20 select-none mr-2">02</span>
-                      <span className="text-[#569cd6]">status:</span>{' '}
-                      <span className="text-emerald-400">&quot;{activeExp.status}&quot;</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <div>
-                        <span className="text-white/20 select-none mr-2">03</span>
-                        <span className="text-[#569cd6]">location:</span>{' '}
-                        <span className="text-[#ce9178]">&quot;{activeExp.location}&quot;</span>
-                      </div>
-                      <div>
-                        <span className="text-[#569cd6]">verification:</span>{' '}
-                        <span className="text-white/60">&quot;{activeExp.verification}&quot;</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </motion.div>
           </div>
@@ -741,7 +829,7 @@ export default function Experience() {
           {/* ═══════════════════════════════════════════════════════
                RIGHT PANEL: 3D Tilting Details Card (col-span-7)
           ═══════════════════════════════════════════════════════ */}
-          <div ref={detailRef} className="md:col-span-7 flex flex-col justify-stretch">
+          <div className="md:col-span-7 flex flex-col justify-stretch">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeExp.id}
@@ -756,6 +844,69 @@ export default function Experience() {
             </AnimatePresence>
           </div>
 
+        </div>
+
+        {/* Mobile View Layout (Mobile only) */}
+        <div className="flex md:hidden flex-col w-full">
+          {/* Mobile Cards Horizontal Scroll */}
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 px-4 w-full scroll-smooth [&::-webkit-scrollbar]:hidden"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
+            {chronologicalExps.map((exp) => (
+              <div
+                key={exp.id}
+                data-card-id={exp.id}
+                className="w-[85vw] sm:w-[75vw] shrink-0 snap-center"
+              >
+                <InteractiveDetailCard exp={exp} />
+              </div>
+            ))}
+          </div>
+
+          {/* Swipe Indicator & Pagination dots */}
+          <div className="flex flex-col items-center gap-3.5 mt-2 select-none">
+            {/* Pagination Dots */}
+            <div className="flex justify-center gap-2.5">
+              {chronologicalExps.map((exp, idx) => {
+                const isActive = activeId === exp.id;
+                return (
+                  <button
+                    key={exp.id}
+                    onClick={() => handleTimelineNodeClick(exp.id)}
+                    className="h-1.5 rounded-full transition-all duration-300 border-none outline-none"
+                    style={{
+                      width: isActive ? '20px' : '6px',
+                      backgroundColor: isActive ? exp.color : 'rgba(255, 255, 255, 0.15)',
+                      boxShadow: isActive ? `0 0 8px ${exp.color}` : 'none',
+                    }}
+                  />
+                );
+              })}
+            </div>
+            
+            {/* Micro-animated Swipe Instruction */}
+            <div className="flex items-center gap-1 text-[9px] font-mono tracking-[0.2em] text-white/30 uppercase animate-pulse">
+              <span>Swipe to explore</span>
+              <motion.div
+                animate={{
+                  x: [0, 4, 0],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: 'easeInOut',
+                }}
+              >
+                <ChevronRight className="w-3.5 h-3.5 text-white/40" />
+              </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* ═══════════════════════════════════════════════════════

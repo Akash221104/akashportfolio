@@ -18,7 +18,7 @@
   --color-secondary: var(--secondary);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  
+
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-display: var(--font-outfit), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
@@ -29,26 +29,49 @@
   --animate-grid-float: grid-float 20s linear infinite;
 
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
+
   @keyframes fade-in-up {
     from {
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
+
   @keyframes pulse-slow {
-    0%, 100% { opacity: 0.15; transform: scale(1); }
-    50% { opacity: 0.3; transform: scale(1.1); }
+
+    0%,
+    100% {
+      opacity: 0.15;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.3;
+      transform: scale(1.1);
+    }
   }
+
   @keyframes grid-float {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-40px); }
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(-40px);
+    }
   }
 }
 
@@ -59,7 +82,8 @@ html {
 }
 
 /* Lenis scroll smoothing configurations */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -89,13 +113,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0A0A0A;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #27272A;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #3B82F6;
 }
@@ -118,7 +145,7 @@ body {
 /* Animated Grid Background */
 .grid-bg {
   background-size: 40px 40px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
@@ -144,16 +171,47 @@ body {
 
 /* Heavy Shaky effect */
 @keyframes heavy-shake {
-  0%, 100% { transform: translate(0, 0) scale(1.02); }
-  10% { transform: translate(-3px, -2px) scale(1.02); }
-  20% { transform: translate(-2px, 2px) scale(1.02); }
-  30% { transform: translate(2px, -2px) scale(1.02); }
-  40% { transform: translate(-2px, 3px) scale(1.02); }
-  50% { transform: translate(3px, 2px) scale(1.02); }
-  60% { transform: translate(2px, -3px) scale(1.02); }
-  70% { transform: translate(-3px, -2px) scale(1.02); }
-  80% { transform: translate(3px, -2px) scale(1.02); }
-  90% { transform: translate(-2px, 3px) scale(1.02); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.02);
+  }
+
+  10% {
+    transform: translate(-3px, -2px) scale(1.02);
+  }
+
+  20% {
+    transform: translate(-2px, 2px) scale(1.02);
+  }
+
+  30% {
+    transform: translate(2px, -2px) scale(1.02);
+  }
+
+  40% {
+    transform: translate(-2px, 3px) scale(1.02);
+  }
+
+  50% {
+    transform: translate(3px, 2px) scale(1.02);
+  }
+
+  60% {
+    transform: translate(2px, -3px) scale(1.02);
+  }
+
+  70% {
+    transform: translate(-3px, -2px) scale(1.02);
+  }
+
+  80% {
+    transform: translate(3px, -2px) scale(1.02);
+  }
+
+  90% {
+    transform: translate(-2px, 3px) scale(1.02);
+  }
 }
 
 .animate-heavy-shake {
@@ -162,13 +220,27 @@ body {
 
 /* Smoke Cloud Drift animations */
 @keyframes smoke-drift-1 {
-  0% { transform: translate(-10%, -15%) scale(1) rotate(0deg); opacity: 0.08; }
-  100% { transform: translate(15%, 15%) scale(1.4) rotate(360deg); opacity: 0.28; }
+  0% {
+    transform: translate(-10%, -15%) scale(1) rotate(0deg);
+    opacity: 0.08;
+  }
+
+  100% {
+    transform: translate(15%, 15%) scale(1.4) rotate(360deg);
+    opacity: 0.28;
+  }
 }
 
 @keyframes smoke-drift-2 {
-  0% { transform: translate(15%, -10%) scale(1.1) rotate(0deg); opacity: 0.05; }
-  100% { transform: translate(-15%, 10%) scale(1.6) rotate(-360deg); opacity: 0.22; }
+  0% {
+    transform: translate(15%, -10%) scale(1.1) rotate(0deg);
+    opacity: 0.05;
+  }
+
+  100% {
+    transform: translate(-15%, 10%) scale(1.6) rotate(-360deg);
+    opacity: 0.22;
+  }
 }
 
 .animate-smoke-1 {
@@ -185,6 +257,7 @@ body {
     opacity: 0;
     transform: translate(-50%, -40%) scale(0.92) translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1) translateY(0);
@@ -194,4 +267,3 @@ body {
 .animate-fade-in {
   animation: fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-

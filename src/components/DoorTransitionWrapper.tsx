@@ -67,10 +67,10 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      
+
       // NATURAL DIRECTION: Rolling wheel DOWN (deltaY > 0) advances the opening sequence.
       // Damping and sensitivity optimized to require more scroll distance (smoother threshold)
-      const sensitivity = 0.00012; 
+      const sensitivity = 0.00012;
       scrollVelocityRef.current += e.deltaY * sensitivity;
 
       // Clamp velocity to maintain a smooth, premium feel
@@ -89,9 +89,9 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
       if (e.touches.length > 0) {
         const currentY = e.touches[0].clientY;
         const deltaY = currentY - touchStartYRef.current;
-        
+
         // NATURAL DIRECTION: Swiping UP (deltaY < 0, dragging page up to scroll down) advances the video.
-        const sensitivity = 0.00035; 
+        const sensitivity = 0.00035;
         scrollVelocityRef.current -= deltaY * sensitivity;
 
         // Clamp velocity
@@ -230,7 +230,7 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
           <div className="absolute inset-0 pointer-events-none vignette-overlay z-20" />
 
           {/* Scroll instruction indicator text */}
-          <div 
+          <div
             className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-white/80 z-30 select-none transition-opacity duration-500"
             style={{
               opacity: isDoorOpeningStarted ? 0 : 1,
@@ -240,14 +240,14 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
             <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-gradient-primary">
               Scroll Down
             </span>
-            
+
             <div className="flex flex-col items-center gap-1">
               {/* Bouncing chevron pointing DOWN to guide user */}
               <svg className="w-5 h-5 text-primary animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-            
+
             <span className="text-[9px] text-muted tracking-wider uppercase font-medium">
               To open the portal
             </span>
