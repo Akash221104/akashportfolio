@@ -40,7 +40,7 @@ export default function Hero() {
           playsInline
           preload="metadata"
           poster="/hero-poster.webp"
-          className="w-full h-full object-cover opacity-60 md:opacity-75 block"
+          className="w-full h-full object-cover opacity-80 md:opacity-90 block"
         >
           <source src="/hero-bg-480.webm" type="video/webm" media="(max-width: 768px)" />
           <source src="/hero-bg-720.webm" type="video/webm" />
@@ -49,7 +49,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Layer 2: Dark Overlay + Subtle Blur */}
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-[1px] z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px] z-10 pointer-events-none" />
 
       {/* Layer 3: Bottom Gradient Fade (blends the video background seamlessly into the About section) */}
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-background z-10 pointer-events-none" />

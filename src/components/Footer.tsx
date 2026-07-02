@@ -4,7 +4,10 @@ import React from 'react';
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import { Github, Linkedin } from '@/components/ui/Icons';
-import VisitorCounter from './VisitorCounter';
+import dynamic from 'next/dynamic';
+
+// ssr: false ensures this never runs on the server — it reads localStorage/sessionStorage
+const VisitorCounter = dynamic(() => import('./VisitorCounter'), { ssr: false });
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

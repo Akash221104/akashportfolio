@@ -4,8 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 
 export default function VisitorCounter() {
-  const [count, setCount] = useState<number | null>(() => {
-    if (typeof window === 'undefined') return null;
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // All storage access must be in useEffect — never in render or lazy initializers
+    // because the server cannot read localStorage/sessionStorage, causing hydration mismatches.
+    const key = 'akashportfolio_satpute_unique_visits_counter';
     const storageKey = 'akashportfolio_visited_session';
     const localCountKey = 'akashportfolio_local_visitor_count';
     const BASE_SEED = 500;
@@ -19,22 +23,14 @@ export default function VisitorCounter() {
       sessionStorage.setItem(storageKey, 'true');
     }
 
-    return BASE_SEED + localCountVal;
-  });
+    // Set local fallback count immediately so UI has something to show
+    setCount(BASE_SEED + localCountVal);
 
-  useEffect(() => {
-    const key = 'akashportfolio_satpute_unique_visits_counter';
-    const storageKey = 'akashportfolio_visited_session';
-    const BASE_SEED = 500;
-
-    const hasVisited = sessionStorage.getItem(storageKey);
-    
-    // Try to fetch from the free CountAPI
+    // Try to fetch from the free CountAPI for a global count
     const endpoint = hasVisited
       ? `https://countapi.mileshilliard.com/api/v1/get/${key}`
       : `https://countapi.mileshilliard.com/api/v1/hit/${key}`;
 
-    // Create a controller to abort the fetch if it takes too long (timeout)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2000);
 
@@ -46,12 +42,10 @@ export default function VisitorCounter() {
       })
       .then((data) => {
         if (data && typeof data.value === 'number') {
-          // If CountAPI is working, use its value + seed (ensuring it's global and increments)
           setCount(BASE_SEED + data.value);
         }
       })
       .catch((err) => {
-        // Fallback is already set, so we can ignore this or log it in dev
         console.warn('VisitorCounter API failed or timed out, using local fallback:', err);
       });
 
