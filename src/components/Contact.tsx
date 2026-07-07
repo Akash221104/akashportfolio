@@ -36,10 +36,28 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      // Simulate form submission delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setIsSuccess(true);
-      setFormState({ name: '', email: '', subject: '', message: '' });
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'a94f1460-dd94-4315-8fcf-09b9e0710fc1',
+          name: formState.name,
+          email: formState.email,
+          subject: formState.subject,
+          message: formState.message,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsSuccess(true);
+        setFormState({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setErrorMsg(data.message || 'An error occurred. Please try again later.');
+      }
     } catch {
       setErrorMsg('An error occurred. Please try again later.');
     } finally {

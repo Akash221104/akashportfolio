@@ -88,7 +88,7 @@ interface About3DProps {
 
 export default function About3D({ mouse, scrollProgress }: About3DProps) {
   const { isLowEndDevice } = useAnimation();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

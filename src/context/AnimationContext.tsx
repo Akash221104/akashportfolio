@@ -15,7 +15,7 @@ interface AnimationContextType {
 const AnimationContext = createContext<AnimationContextType | undefined>(undefined);
 
 export function AnimationProvider({ children }: { children: React.ReactNode }) {
-  const [isIntroActive, setIsIntroActive] = useState(true);
+  const [isIntroActive, setIsIntroActive] = useState(false); // Default to false to prevent loading video during SSR/init
   const [isDoorOpeningStarted, setIsDoorOpeningStarted] = useState(false);
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
@@ -58,6 +58,9 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLowEndDevice(lowEnd);
 
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
     // 2. Query/Session check
     const urlParams = new URLSearchParams(window.location.search);
     const isReplay = urlParams.get('replay') === 'true';
@@ -67,8 +70,8 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
 
     const hasPlayed = sessionStorage.getItem('hasPlayedDoorTransition') === 'true';
 
-    // If already played or it's a low-end device, bypass the intro animation entirely
-    if (hasPlayed || lowEnd) {
+    // If already played, low-end device, or on mobile, bypass the intro animation entirely
+    if (hasPlayed || lowEnd || isMobile) {
       setIsIntroActive(false);
       setIsDoorOpeningStarted(true);
       setIsIntroComplete(true);

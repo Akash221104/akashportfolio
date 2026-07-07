@@ -18,9 +18,20 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
   } = useAnimation();
 
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [videoSrc, setVideoSrc] = useState('');
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
+
+  // Defer loading of heavy video assets to prioritize initial critical path loading
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (!isMobile && isIntroActive) {
+        setVideoSrc('/OPENING.webm');
+      }
+    }
+  }, [isIntroActive]);
 
   // Physics simulation state
   const scrollProgressRef = useRef(0);
@@ -234,12 +245,12 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
             pointerEvents: isFadingOut ? 'none' : 'auto',
           }}
         >
-          {/* Native source video (scrubbed programmatically, hidden from view) */}
           <video
             ref={videoRef}
-            src="/OPENING.webm"
+            src={videoSrc}
             muted
             playsInline
+            crossOrigin="anonymous"
             preload="auto"
             onError={(e) => {
               console.error('Door Transition: Video loading error:', e);

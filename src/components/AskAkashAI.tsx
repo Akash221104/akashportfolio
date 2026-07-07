@@ -20,7 +20,7 @@ export default function AskAkashAI() {
       id: 'welcome',
       sender: 'bot',
       text: "Hi! I'm Akash's AI Assistant. Ask me anything about his projects, experience, skills, or blog articles!",
-      timestamp: new Date(),
+      timestamp: new Date('2026-07-07T00:00:00Z'),
     },
   ]);
   const [inputValue, setInputValue] = useState('');
