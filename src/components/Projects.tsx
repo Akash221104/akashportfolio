@@ -28,6 +28,36 @@ interface Project {
 
 const projects: Project[] = [
   {
+    id: 'proj-5',
+    name: 'PhotoShare AI',
+    description: 'AI-powered event photo-sharing platform featuring InsightFace recognition, active liveness verification, pgvector similarity search, and collaborative galleries.',
+    features: [
+      'InsightFace facial embeddings & pgvector similarity search',
+      'Active liveness detection (head movement, blink, smile tracking)',
+      'QR-based event onboarding & printable event posters',
+      'Collaborative gallery & privacy-first personal photo matching',
+    ],
+    tech: ['Next.js 15', 'FastAPI', 'InsightFace', 'PostgreSQL', 'pgvector', 'MediaPipe', 'Cloudinary', 'Tailwind CSS'],
+    github: 'https://github.com/Akash221104/Photoshare_app',
+    demo: 'https://photoshare-app-iota.vercel.app/',
+    color: 'from-blue-600/20 to-indigo-600/20',
+    caseStudy: {
+      challenge: 'After large events (weddings, conferences, corporate events, festivals), photographers capture thousands of photos. Guests struggle to find their pictures among thousands of images, while sharing full drives creates privacy and security concerns.',
+      solution: 'Developed PhotoShare AI, combining InsightFace facial recognition, MediaPipe active liveness detection (blink/head/smile challenges), and pgvector similarity search. Guests scan a QR code, upload a verified selfie, and automatically receive a personalized gallery containing only their photos.',
+      architecture: [
+        'Guest QR Scan & MediaPipe -> Browser-based active liveness verification challenge',
+        'FastAPI AI Microservice -> InsightFace generates 512-D face embeddings',
+        'PostgreSQL + pgvector -> Cosine similarity vector search queries matched photos',
+        'Next.js 15 App Router & Cloudinary -> Delivers privacy-focused personalized galleries and host analytics'
+      ],
+      outcomes: [
+        'Reduced attendee photo search time from hours of manual searching to seconds.',
+        'Implemented anti-spoofing active liveness detection (blink/smile/head turn) in-browser using MediaPipe.',
+        'Engineered privacy-first access control so users can only access their AI-matched galleries.'
+      ]
+    }
+  },
+  {
     id: 'proj-1',
     name: 'CourseCrafter',
     description: 'AI-powered learning platform that generates personalized learning paths using YouTube content and intelligent ranking algorithms.',
@@ -214,7 +244,7 @@ function ProjectCard({
         {/* Mock hacker coordinates trackers */}
         <div className="absolute top-0.5 left-7 font-sans font-bold text-[7px] text-emerald-400/50 tracking-wider">SYS.LOCK</div>
         <div className="absolute bottom-0.5 left-7 font-sans font-bold text-[7px] text-emerald-400/50 tracking-wider">
-          0x{project.id === 'proj-1' ? 'A3F' : project.id === 'proj-2' ? 'B90' : project.id === 'proj-3' ? 'CF4' : 'DE1'}
+          0x{project.id === 'proj-5' ? 'E82' : project.id === 'proj-1' ? 'A3F' : project.id === 'proj-2' ? 'B90' : project.id === 'proj-3' ? 'CF4' : 'DE1'}
         </div>
       </motion.div>
 
@@ -243,10 +273,10 @@ function ProjectCard({
 
         {/* Telemetry data points */}
         <div className="absolute top-3.5 left-9 text-[8px] font-mono text-emerald-500/30 leading-none select-none">
-          LOC.ADDR: 0x{project.id === 'proj-1' ? 'A3F2' : project.id === 'proj-2' ? 'B90C' : project.id === 'proj-3' ? 'CF40' : 'DE12'}
+          LOC.ADDR: 0x{project.id === 'proj-5' ? 'E829' : project.id === 'proj-1' ? 'A3F2' : project.id === 'proj-2' ? 'B90C' : project.id === 'proj-3' ? 'CF40' : 'DE12'}
         </div>
         <div className="absolute top-3.5 right-9 text-[8px] font-mono text-emerald-500/30 leading-none select-none">
-          PORT: {project.id === 'proj-1' ? '8080' : project.id === 'proj-2' ? '5000' : project.id === 'proj-3' ? '11434' : '8501'}
+          PORT: {project.id === 'proj-5' ? '8000' : project.id === 'proj-1' ? '8080' : project.id === 'proj-2' ? '5000' : project.id === 'proj-3' ? '11434' : '8501'}
         </div>
         <div className="absolute bottom-3.5 left-9 text-[8px] font-mono text-emerald-500/30 leading-none select-none">
           SYS.STATE: ACTIVE

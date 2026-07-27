@@ -63,6 +63,12 @@ const KNOWLEDGE_BASE = {
   ],
   projects: [
     {
+      name: 'PhotoShare AI',
+      description: 'AI-powered event photo-sharing platform featuring InsightFace recognition, active liveness detection, pgvector similarity search, and collaborative galleries.',
+      features: ['AI face recognition', 'Active liveness detection', 'InsightFace 512-D embeddings', 'pgvector similarity search', 'QR event sharing & posters', 'Privacy-first personal galleries'],
+      tech: ['Next.js 15', 'FastAPI', 'InsightFace', 'PostgreSQL', 'pgvector', 'MediaPipe', 'Cloudinary', 'Better Auth']
+    },
+    {
       name: 'CourseCrafter',
       description: 'AI-powered learning platform that generates personalized learning paths using YouTube content and intelligent ranking algorithms.',
       features: ['Personalized courses', 'Learning path generation', 'YouTube API integration', 'Difficulty-based recommendations'],
@@ -87,13 +93,13 @@ const KNOWLEDGE_BASE = {
     }
   ],
   skills: {
-    programming: ['Java', 'Python', 'JavaScript', 'C'],
-    frontend: ['React', 'Next.js', 'HTML', 'CSS', 'Tailwind'],
-    backend: ['Node.js', 'Express.js'],
-    database: ['MySQL', 'PostgreSQL', 'MongoDB'],
-    ai: ['RAG', 'TensorFlow', 'Scikit-learn', 'LLM Applications', 'Vector Search'],
-    cloud: ['Google Cloud Platform'],
-    tools: ['Git', 'GitHub', 'Postman', 'Figma'],
+    programming: ['Java', 'Python', 'JavaScript', 'C', 'TypeScript'],
+    frontend: ['React', 'Next.js 15', 'HTML', 'CSS', 'Tailwind CSS', 'Shadcn UI', 'Framer Motion'],
+    backend: ['Node.js', 'Express.js', 'FastAPI'],
+    database: ['MySQL', 'PostgreSQL', 'pgvector', 'MongoDB', 'ChromaDB'],
+    ai: ['RAG', 'InsightFace', 'MediaPipe Face Landmarker', 'Vector Search (pgvector/ChromaDB)', 'TensorFlow', 'Scikit-learn', 'LLM Applications'],
+    cloud: ['Google Cloud Platform', 'Cloudinary', 'Vercel', 'Neon PostgreSQL'],
+    tools: ['Git', 'GitHub', 'Docker', 'Postman', 'Figma'],
     analytics: ['SQL', 'Data Analysis', 'Dashboard Development', 'Data Visualization']
   },
   education: {
@@ -315,8 +321,43 @@ export async function askAkashAgent(query: string): Promise<KnowledgeResponse> {
     };
   }
 
+  // Sub-Intent: PhotoShare AI / Face Recognition / Liveness Detection
+  if (normalized.includes('photoshare') || normalized.includes('photo share') || normalized.includes('insightface') || normalized.includes('liveness') || normalized.includes('pgvector') || normalized.includes('face recognition') || normalized.includes('event photo')) {
+    return {
+      answer: `**PhotoShare AI** is an AI-powered event photo-sharing platform designed for weddings, college events, conferences, and festivals:
+• **AI Face Recognition**: Uses **InsightFace** to extract 512-dimensional facial embeddings and **pgvector** in PostgreSQL for fast similarity search.
+• **Active Liveness Detection**: Prevents selfie spoofing using browser-based **MediaPipe** challenge sequences (head movement, blink, and smile detection).
+• **QR-Based Onboarding**: Automatically generates shareable links, QR codes, and printable A4 posters for zero-friction attendee access.
+• **Privacy-First Architecture**: Guests only receive galleries containing their own photos; hosts manage events without accessing private AI-matched galleries.
+• **Tech Stack**: Next.js 15 (App Router), FastAPI, PostgreSQL + pgvector, Cloudinary, MediaPipe, InsightFace, Better Auth, Framer Motion.
+
+[Live Demo](https://photoshare-app-iota.vercel.app/) | [GitHub Repository](https://github.com/Akash221104/Photoshare_app)`,
+      suggestions: [
+        'What tech stack is used in PhotoShare AI?',
+        'Tell me about CourseCrafter',
+        'Tell me about the RAG AI Chatbot project',
+        'What technologies does Akash work with?'
+      ]
+    };
+  }
+
   // Intent 4: Projects (General)
   if (normalized.includes('project') || normalized.includes('built') || normalized.includes('portfolio') || normalized.includes('codebase') || normalized.includes('github link') || normalized.includes('rag')) {
+    if (normalized.includes('photoshare') || normalized.includes('photo share')) {
+      return {
+        answer: `**PhotoShare AI** is an AI-powered event photo-sharing platform built with **Next.js 15, FastAPI, InsightFace, PostgreSQL + pgvector, and MediaPipe**:
+• Solves the problem of distributing thousands of event photos by automatically indexing attendees with facial recognition embeddings.
+• Incorporates **MediaPipe active liveness detection** (head turns, blinks, smiles) to prevent selfie spoofing.
+• Features **QR-based event access**, printable A4 event posters, host dashboards, and privacy-first personal photo galleries.
+
+[Live Demo](https://photoshare-app-iota.vercel.app/) | [GitHub Repository](https://github.com/Akash221104/Photoshare_app)`,
+        suggestions: [
+          'What tech stack is used in PhotoShare AI?',
+          'Tell me about CourseCrafter',
+          'Tell me about the RAG AI Chatbot project'
+        ]
+      };
+    }
     if (normalized.includes('rag chatbot') || normalized.includes('chatbot') || normalized.includes('rag ai')) {
       return {
         answer: `The **RAG AI Chatbot** is an enterprise-style Retrieval-Augmented Generation chatbot developed by Akash during his C-DAC internship:
@@ -343,17 +384,18 @@ export async function askAkashAgent(query: string): Promise<KnowledgeResponse> {
 
     return {
       answer: `Akash has built several high-impact projects, particularly in AI and Web Development:
-1. **CourseCrafter**: AI learning path generator (Next.js, Node.js, AI, YouTube API).
-2. **RAG AI Chatbot**: Enterprise retrieval-augmented QA chatbot (Next.js, Node.js, Ollama, Vector DB).
-3. **Medicine Recommendation System**: Symptom-based disease prediction and guidance system (Python, Scikit-learn).
-4. **Smart Retail Decision Assistant**: Pricing and inventory optimizer (Python, SQL, Analytics).
+1. **PhotoShare AI**: AI-powered event photo sharing platform with InsightFace recognition, active liveness verification, and pgvector similarity search.
+2. **CourseCrafter**: AI learning path generator (Next.js, Node.js, AI, YouTube API).
+3. **RAG AI Chatbot**: Enterprise retrieval-augmented QA chatbot (Next.js, Node.js, Ollama, Vector DB).
+4. **Medicine Recommendation System**: Symptom-based disease prediction and guidance system (Python, Scikit-learn).
+5. **Smart Retail Decision Assistant**: Pricing and inventory optimizer (Python, SQL, Analytics).
 
 *Which of these would you like to know more about?*`,
       suggestions: [
+        'Tell me about PhotoShare AI',
         'Tell me about CourseCrafter',
         'Tell me about the RAG AI Chatbot project',
-        'What is the Medicine Recommendation System?',
-        'What is the difficulty-based ranking algorithm?'
+        'What is the Medicine Recommendation System?'
       ]
     };
   }
