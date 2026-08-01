@@ -30,7 +30,7 @@ export default function Home() {
         {/* Main Sections */}
         <main className="flex-1">
           <Hero />
-          
+
           <ScrollReveal>
             <div id="about">
               <LazySection fallbackHeight="min-h-[600px]">
@@ -38,7 +38,7 @@ export default function Home() {
               </LazySection>
             </div>
           </ScrollReveal>
-          
+
           <ScrollReveal>
             <div id="experience">
               <LazySection fallbackHeight="min-h-[600px]">
@@ -46,7 +46,7 @@ export default function Home() {
               </LazySection>
             </div>
           </ScrollReveal>
-          
+
           <ScrollReveal>
             <div id="projects">
               <LazySection fallbackHeight="min-h-[800px]">
@@ -54,7 +54,7 @@ export default function Home() {
               </LazySection>
             </div>
           </ScrollReveal>
-          
+
           <ScrollReveal>
             <div id="skills">
               <LazySection fallbackHeight="min-h-[400px]">
@@ -62,7 +62,7 @@ export default function Home() {
               </LazySection>
             </div>
           </ScrollReveal>
-          
+
           <ScrollReveal>
             <div id="achievements">
               <LazySection fallbackHeight="min-h-[500px]">

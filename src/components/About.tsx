@@ -2,10 +2,8 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useMotionTemplate } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
-const About3D = dynamic(() => import('./About3D'), { ssr: false });
+import About3D from './About3D';
 
 interface AboutCardProps {
   label: string;
@@ -192,7 +190,7 @@ export default function About() {
         <div className="absolute inset-20 border border-white/5 rounded-full animate-spin" style={{ animationDuration: '18s', animationDirection: 'reverse' }} />
 
         {/* Orbiting HUD satellite indicators */}
-        <motion.div 
+        <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
           className="absolute inset-0"
@@ -201,7 +199,7 @@ export default function About() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-purple-500/50 shadow-[0_0_8px_rgba(168,85,247,0.5)] animate-pulse" />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
           className="absolute inset-0"
