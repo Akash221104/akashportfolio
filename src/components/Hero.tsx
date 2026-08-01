@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Download, Mail, Sparkles, BookOpen } from 'lucide-react';
 import { Github, Linkedin } from '@/components/ui/Icons';
 import Button from './ui/Button';
-import FuturisticBackground from './FuturisticBackground';
+import InteractiveBackground from './InteractiveBackground';
 import AIAvatarHologram from './AIAvatarHologram';
 import { useAnimation } from '@/context/AnimationContext';
 
@@ -64,8 +64,8 @@ export default function Hero({ onOpenChat }: HeroProps) {
       }
       className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-28 pb-16 px-6 md:px-12 bg-background"
     >
-      {/* 60fps Futuristic Backdrop Engine */}
-      <FuturisticBackground />
+      {/* Interactive Constellation Particle Canvas Engine (Same as About / Projects) */}
+      <InteractiveBackground rgbColor="56, 189, 248" />
 
       {/* Hero Split Layout Grid */}
       <div className="relative z-20 max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
