@@ -626,7 +626,7 @@ export default function Experience() {
 
             {/* Timeline nodes */}
             <div className="flex justify-between relative z-10">
-              {chronologicalExps.map((exp, idx) => {
+              {chronologicalExps.map((exp) => {
                 const isActive = activeId === exp.id;
                 return (
                   <button
@@ -876,7 +876,7 @@ export default function Experience() {
           <div className="flex flex-col items-center gap-3.5 mt-2 select-none">
             {/* Pagination Dots */}
             <div className="flex justify-center gap-2.5">
-              {chronologicalExps.map((exp, idx) => {
+              {chronologicalExps.map((exp) => {
                 const isActive = activeId === exp.id;
                 return (
                   <button

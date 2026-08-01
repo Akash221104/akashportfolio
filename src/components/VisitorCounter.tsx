@@ -4,14 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 
 export default function VisitorCounter() {
-  const [count, setCount] = useState<number | null>(null);
-
+  const [count, setCount] = useState<number | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const localCountKey = 'local_visitor_count';
+    const BASE_SEED = 500;
+    const localCountVal = parseInt(localStorage.getItem(localCountKey) || '0', 10);
+    return BASE_SEED + localCountVal;
+  });
   useEffect(() => {
-    // All storage access must be in useEffect — never in render or lazy initializers
-    // because the server cannot read localStorage/sessionStorage, causing hydration mismatches.
-    const key = 'akashportfolio_satpute_unique_visits_counter';
-    const storageKey = 'akashportfolio_visited_session';
-    const localCountKey = 'akashportfolio_local_visitor_count';
+    const key = 'akash_satpute_portfolio_visitors_2026';
+    const storageKey = 'has_visited_site';
+    const localCountKey = 'local_visitor_count';
     const BASE_SEED = 500;
 
     const hasVisited = sessionStorage.getItem(storageKey);
@@ -22,9 +25,6 @@ export default function VisitorCounter() {
       localStorage.setItem(localCountKey, localCountVal.toString());
       sessionStorage.setItem(storageKey, 'true');
     }
-
-    // Set local fallback count immediately so UI has something to show
-    setCount(BASE_SEED + localCountVal);
 
     // Try to fetch from the free CountAPI for a global count
     const endpoint = hasVisited

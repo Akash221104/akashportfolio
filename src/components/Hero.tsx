@@ -1,208 +1,241 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { BookOpen, ArrowRight, Download, Mail } from 'lucide-react';
+import { ArrowRight, Download, Mail, Sparkles, BookOpen } from 'lucide-react';
 import { Github, Linkedin } from '@/components/ui/Icons';
 import Button from './ui/Button';
+import FuturisticBackground from './FuturisticBackground';
+import AIAvatarHologram from './AIAvatarHologram';
 import { useAnimation } from '@/context/AnimationContext';
 
+const BIO_ROLES = [
+  'Building AI Products',
+  'Building Intelligent Systems',
+  'Building Developer Tools',
+  'Building Scalable Web Experiences'
+];
 
+interface HeroProps {
+  onOpenChat?: () => void;
+}
 
-export default function Hero() {
+export default function Hero({ onOpenChat }: HeroProps) {
   const { isIntroActive, isDoorOpeningStarted } = useAnimation();
   const shouldAnimate = !isIntroActive;
+  const [roleIndex, setRoleIndex] = useState(0);
+
   const { scrollY } = useScroll();
-  const videoOpacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const videoScale = useTransform(scrollY, [0, 600], [1, 1.05]);
-  const contentY = useTransform(scrollY, [0, 600], [0, 80]);
+  const avatarScale = useTransform(scrollY, [0, 500], [1, 0.75]);
+  const avatarOpacity = useTransform(scrollY, [0, 500], [1, 0.4]);
+  const avatarY = useTransform(scrollY, [0, 500], [0, 100]);
+
+  // Bio roles crossfade interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % BIO_ROLES.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleOpenChatTrigger = () => {
+    if (onOpenChat) {
+      onOpenChat();
+    } else {
+      // Trigger chatbot open button click if available on DOM
+      const chatBtn = document.querySelector('[aria-label="Open Ask Akash AI chatbot"]') as HTMLButtonElement;
+      if (chatBtn) chatBtn.click();
+    }
+  };
 
   return (
     <section
-      style={isIntroActive ? {
-        opacity: isDoorOpeningStarted ? 1 : 0,
-        filter: isDoorOpeningStarted ? 'none' : 'blur(10px)',
-        transform: `translate3d(0, 0, 0) scale(${isDoorOpeningStarted ? 1 : 0.95})`,
-        transition: 'opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1)',
-        willChange: 'opacity, filter, transform',
-      } : {}}
-      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-24 pb-12 px-6 md:px-12 bg-background"
+      style={
+        isIntroActive
+          ? {
+              opacity: isDoorOpeningStarted ? 1 : 0,
+              filter: isDoorOpeningStarted ? 'none' : 'blur(10px)',
+              transform: `translate3d(0, 0, 0) scale(${isDoorOpeningStarted ? 1 : 0.95})`,
+              transition:
+                'opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1)',
+              willChange: 'opacity, filter, transform',
+            }
+          : {}
+      }
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-28 pb-16 px-6 md:px-12 bg-background"
     >
-      {/* Layer 1: Fullscreen Video Background */}
-      <motion.div
-        style={{ opacity: videoOpacity, scale: videoScale }}
-        className="absolute inset-0 w-full h-full z-0 overflow-hidden"
-      >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/hero-poster.webp"
-          className="w-full h-full object-cover opacity-40 md:opacity-50 block"
-        >
-          <source src="/hero-bg-480.webm" type="video/webm" media="(max-width: 768px)" />
-          <source src="/hero-bg-720.webm" type="video/webm" />
-          <source src="/hero-bg-720.mp4" type="video/mp4" />
-        </video>
-      </motion.div>
+      {/* 60fps Futuristic Backdrop Engine */}
+      <FuturisticBackground />
 
-      {/* Layer 2: Dark Overlay + Subtle Blur (Darkened for contrast) */}
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-[1.5px] z-10 pointer-events-none" />
-
-      {/* Layer 3: Bottom Gradient Fade (blends the video background seamlessly into the About section) */}
-      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-background z-10 pointer-events-none" />
-
-      {/* Premium Floating Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[35vw] h-[35vw] rounded-full bg-primary/10 blur-[120px] animate-pulse-slow z-10 pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[30vw] h-[30vw] rounded-full bg-secondary/10 blur-[100px] animate-pulse-slow z-10 pointer-events-none" style={{ animationDelay: '-4s' }} />
-
-      {/* Layer 4: Hero Content (using parallax contentY animation) */}
-      <motion.div
-        style={{ y: contentY }}
-        className="relative z-20 max-w-5xl w-full flex flex-col items-center text-center mt-6"
-      >
-        {/* Animated tag */}
+      {/* Hero Split Layout Grid */}
+      <div className="relative z-20 max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
+        
+        {/* LEFT COLUMN (Middle-aligned Text & CTAs) */}
         <motion.div
-          initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full glass border border-border text-xs text-primary font-medium mb-6 font-display"
+          initial={shouldAnimate ? { opacity: 0, x: -30 } : false}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="lg:col-span-7 flex flex-col items-center justify-center text-center"
         >
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          Open to Opportunities
-        </motion.div>
-
-        {/* Big 3D extruded Headline */}
-        <motion.h1
-          initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-6xl md:text-8xl font-display font-black tracking-tight leading-none mb-6 text-white"
-          style={{
-            textShadow: '0 1px 0 #1e1b4b, 0 2px 0 #312e81, 0 3px 0 #3730a3, 0 4px 0 #4338ca, 0 5px 0 #4f46e5, 0 6px 0 #6366f1, 1px 8px 12px rgba(99, 102, 241, 0.45), 0 12px 24px rgba(0, 0, 0, 0.8), 0 0 25px rgba(99, 102, 241, 0.25)',
-            transform: 'perspective(500px) rotateX(6deg)',
-            transformStyle: 'preserve-3d',
-          }}
-        >
-          AKASH SATPUTE
-        </motion.h1>
-
-        {/* Roles Carousel/Subtitle */}
-        <motion.div
-          initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center gap-2 md:gap-3 text-sm sm:text-base md:text-lg font-medium text-white/90 font-display mb-6"
-        >
-          <span>Computer Engineering Student</span>
-          <span className="text-border/80 hidden sm:inline">•</span>
-          <span>AI Engineer</span>
-          <span className="text-border/80 hidden sm:inline">•</span>
-          <span>Full Stack Developer</span>
-          <span className="text-border/80 hidden sm:inline">•</span>
-          <span>Community Leader</span>
-        </motion.div>
-
-        {/* Tagline Bio */}
-        <motion.p
-          initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-muted text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed mb-10"
-        >
-          Building AI-powered applications, intelligent systems, and scalable web solutions while empowering developer communities.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12"
-        >
-          <a href="#projects" className="w-full sm:w-auto">
-            <Button variant="primary" className="w-full sm:w-auto gap-2">
-              View Projects
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </a>
-          <a href="#contact" className="w-full sm:w-auto">
-            <Button variant="outline" className="w-full sm:w-auto gap-2">
-              Contact Me
-              <Mail className="w-4 h-4" />
-            </Button>
-          </a>
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto"
+          {/* Status Badge */}
+          <motion.div
+            initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-950/60 border border-sky-400/30 text-xs font-mono font-medium text-sky-300 mb-6 shadow-[0_0_15px_rgba(56,189,248,0.2)] backdrop-blur-md"
           >
-            <Button variant="ghost" className="w-full sm:w-auto gap-2 border border-dashed border-border hover:border-muted text-white">
-              Download Resume
-              <Download className="w-4 h-4" />
-            </Button>
-          </a>
-        </motion.div>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+            <span>Open to Full-time Opportunities</span>
+          </motion.div>
 
-        {/* Social Links */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex items-center justify-center gap-8 mb-8"
-        >
-          {/* LinkedIn */}
-          <div className="flex flex-col items-center gap-2 group">
+          {/* Large Sci-Fi Assembly Headline */}
+          <motion.h1
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black tracking-tight leading-none mb-6 text-white text-center"
+            style={{
+              textShadow:
+                '0 1px 0 #1e1b4b, 0 2px 0 #312e81, 0 3px 0 #3730a3, 0 4px 0 #4338ca, 0 5px 0 #4f46e5, 1px 8px 16px rgba(56, 189, 248, 0.4), 0 12px 24px rgba(0, 0, 0, 0.9)',
+            }}
+          >
+            AKASH SATPUTE
+          </motion.h1>
+
+          {/* Smooth Crossfade Bio Role Subtitle */}
+          <div className="h-8 mb-4 overflow-hidden flex items-center justify-center">
+            <motion.div
+              key={BIO_ROLES[roleIndex]}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.4 }}
+              className="text-lg sm:text-xl md:text-2xl font-mono font-bold text-sky-400 tracking-wide flex items-center gap-2 justify-center"
+            >
+              <Sparkles className="w-4 h-4 text-sky-300 animate-spin-slow" />
+              <span>{BIO_ROLES[roleIndex]}</span>
+            </motion.div>
+          </div>
+
+          {/* Bio Copy */}
+          <motion.p
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-zinc-300 text-base sm:text-lg max-w-xl leading-relaxed mb-8 text-center mx-auto"
+          >
+            Building AI products, developer tools, and intelligent web experiences that solve real-world problems.
+          </motion.p>
+
+          {/* Action CTAs (Centered Layout) */}
+          <motion.div
+            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-3.5 w-full mb-10"
+          >
+            {/* Primary CTA: View Projects */}
+            <a href="#projects" className="w-full sm:w-auto">
+              <Button variant="primary" className="w-full sm:w-auto gap-2 shadow-[0_0_20px_rgba(59,130,246,0.35)] hover:shadow-[0_0_30px_rgba(56,189,248,0.5)]">
+                View Projects
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </a>
+
+            {/* Featured AI CTA: Talk to My AI */}
+            <button
+              onClick={handleOpenChatTrigger}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-display font-semibold text-sm shadow-[0_0_25px_rgba(56,189,248,0.4)] transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 cursor-pointer border border-sky-300/30"
+            >
+              <Sparkles className="w-4 h-4 text-sky-200 animate-pulse" />
+              <span>✨ Talk to My AI</span>
+            </button>
+
+            {/* Secondary CTA: Download Resume */}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto"
+            >
+              <Button
+                variant="ghost"
+                className="w-full sm:w-auto gap-2 border border-dashed border-sky-500/40 hover:border-sky-400 text-white bg-zinc-900/60 backdrop-blur-md"
+              >
+                Resume
+                <Download className="w-4 h-4" />
+              </Button>
+            </a>
+
+            {/* Ghost CTA: Contact */}
+            <a href="#contact" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto gap-2">
+                Contact
+                <Mail className="w-4 h-4" />
+              </Button>
+            </a>
+          </motion.div>
+
+          {/* Social Links Row (Centered) */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex items-center justify-center gap-6"
+          >
+            {/* LinkedIn */}
             <a
               href="https://www.linkedin.com/in/akash-satpute-548b5a256/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer"
+              className="flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-sky-400 hover:border-sky-500/40 hover:bg-sky-500/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="LinkedIn Profile"
             >
-              <Linkedin className="w-5 h-5" />
+              <Linkedin className="w-4 h-4" />
+              <span className="text-xs font-mono font-semibold uppercase">LinkedIn</span>
             </a>
-            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-primary transition-colors duration-300 uppercase font-bold">
-              LinkedIn
-            </span>
-          </div>
 
-          {/* GitHub */}
-          <div className="flex flex-col items-center gap-2 group">
+            {/* GitHub */}
             <a
               href="https://github.com/Akash221104"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-white group-hover:border-white/50 group-hover:bg-white/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] cursor-pointer"
+              className="flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/40 hover:bg-white/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="GitHub Profile"
             >
-              <Github className="w-5 h-5" />
+              <Github className="w-4 h-4" />
+              <span className="text-xs font-mono font-semibold uppercase">GitHub</span>
             </a>
-            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-white transition-colors duration-300 uppercase font-bold">
-              GitHub
-            </span>
-          </div>
 
-          {/* Blog */}
-          <div className="flex flex-col items-center gap-2 group">
+            {/* Hashnode Blog */}
             <a
               href="https://akashblogss.hashnode.dev/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-xl border border-border/80 bg-white/5 text-muted group-hover:text-secondary group-hover:border-secondary/50 group-hover:bg-secondary/10 transition-all duration-300 hover:scale-110 shadow-[0_0_15px_transparent] group-hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-pointer"
+              className="flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-purple-400 hover:border-purple-500/40 hover:bg-purple-500/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="Hashnode Blog"
             >
-              <BookOpen className="w-5 h-5" />
+              <BookOpen className="w-4 h-4" />
+              <span className="text-xs font-mono font-semibold uppercase">Blog</span>
             </a>
-            <span className="text-[10px] font-mono tracking-widest text-muted group-hover:text-secondary transition-colors duration-300 uppercase font-bold">
-              Blog
-            </span>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+
+        {/* RIGHT COLUMN (45% desktop width - lg:col-span-5) */}
+        <motion.div
+          style={{
+            scale: avatarScale,
+            opacity: avatarOpacity,
+            y: avatarY,
+          }}
+          initial={shouldAnimate ? { opacity: 0, x: 30 } : false}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="lg:col-span-5 flex justify-center items-center relative"
+        >
+          <AIAvatarHologram onOpenChat={handleOpenChatTrigger} />
+        </motion.div>
+      </div>
     </section>
   );
 }

@@ -27,6 +27,34 @@
   --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-pulse-slow: pulse-slow 8s infinite alternate;
   --animate-grid-float: grid-float 20s linear infinite;
+  --animate-scan-line: scan-line 4s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 12s linear infinite;
+
+  @keyframes scan-line {
+    0% {
+      top: 0%;
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.8;
+    }
+    85% {
+      opacity: 0.8;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   @keyframes fade-in {
     from {

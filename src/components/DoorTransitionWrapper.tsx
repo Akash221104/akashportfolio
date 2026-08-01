@@ -18,20 +18,14 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
   } = useAnimation();
 
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [videoSrc, setVideoSrc] = useState('');
+  const [videoSrc] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+    return !isMobile ? '/OPENING.webm' : '';
+  });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
-
-  // Defer loading of heavy video assets to prioritize initial critical path loading
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-      if (!isMobile && isIntroActive) {
-        setVideoSrc('/OPENING.webm');
-      }
-    }
-  }, [isIntroActive]);
 
   // Physics simulation state
   const scrollProgressRef = useRef(0);
@@ -188,7 +182,7 @@ export default function DoorTransitionWrapper({ children }: DoorTransitionWrappe
               }
             }
             ctx.putImageData(imgData, 0, 0);
-          } catch (e) {
+          } catch {
             // Safe fallback
           }
         }

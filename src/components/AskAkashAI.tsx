@@ -15,6 +15,7 @@ interface Message {
 export default function AskAkashAI() {
   const [isOpen, setIsOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(true);
+  const [bubbleText, setBubbleText] = useState('Ask about Akash!');
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -34,12 +35,35 @@ export default function AskAkashAI() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Section observer for contextual greetings
+  useEffect(() => {
+    const handleScroll = () => {
+      const projectsEl = document.getElementById('projects');
+      const expEl = document.getElementById('experience');
+      const contactEl = document.getElementById('contact');
+
+      const scrollY = window.scrollY;
+
+      if (contactEl && scrollY + 400 >= contactEl.offsetTop) {
+        setBubbleText("Need Akash's contact details?");
+      } else if (projectsEl && scrollY + 400 >= projectsEl.offsetTop) {
+        setBubbleText('Want to know how these AI projects were built?');
+      } else if (expEl && scrollY + 400 >= expEl.offsetTop) {
+        setBubbleText("I can tell you more about Akash's roles!");
+      } else {
+        setBubbleText('Ask about Akash!');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isTyping]);
-
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
@@ -262,7 +286,7 @@ export default function AskAkashAI() {
         )}
       </AnimatePresence>
 
-      {/* ── Persistent Speech Bubble ── */}
+      {/* ── Contextual Speech Bubble ── */}
       <AnimatePresence>
         {showBubble && !isOpen && (
           <motion.div
@@ -274,7 +298,7 @@ export default function AskAkashAI() {
             onClick={handleOpen}
           >
             <Sparkles className="w-4 h-4 shrink-0 animate-pulse" />
-            Ask about Akash!
+            <span>{bubbleText}</span>
             {/* Triangle pointer */}
             <span className="absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-blue-600" />
           </motion.div>
