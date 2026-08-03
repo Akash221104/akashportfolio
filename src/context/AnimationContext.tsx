@@ -15,75 +15,15 @@ interface AnimationContextType {
 const AnimationContext = createContext<AnimationContextType | undefined>(undefined);
 
 export function AnimationProvider({ children }: { children: React.ReactNode }) {
-  const [isIntroActive, setIsIntroActive] = useState(false); // Default to false to prevent loading video during SSR/init
-  const [isDoorOpeningStarted, setIsDoorOpeningStarted] = useState(false);
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const [isIntroActive, setIsIntroActive] = useState(false);
+  const [isDoorOpeningStarted, setIsDoorOpeningStarted] = useState(true);
+  const [isIntroComplete, setIsIntroComplete] = useState(true);
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(true);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    // 1. Low-end device detection
-    const detectLowEnd = (): boolean => {
-      // Slow CPU cores
-      const cores = navigator.hardwareConcurrency;
-      if (cores && cores < 4) return true;
-
-      // Low RAM (in GB)
-      const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-      if (memory && memory < 4) return true;
-
-      // Save Data mode or 2g/3g connections
-      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-      if (conn) {
-        if (conn.saveData) return true;
-        const type = conn.effectiveType;
-        if (type === '2g' || type === '3g') return true;
-      }
-
-      // WebGL check (failure to init WebGL suggests extremely weak GPU or software rendering)
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) return true;
-      } catch {
-        return true;
-      }
-
-      return false;
-    };
-
-    const lowEnd = detectLowEnd();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsLowEndDevice(lowEnd);
-
-    // Detect mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-
-    // 2. Query/Session check
-    const urlParams = new URLSearchParams(window.location.search);
-    const isReplay = urlParams.get('replay') === 'true';
-    if (isReplay) {
-      sessionStorage.removeItem('hasPlayedDoorTransition');
-    }
-
-    const hasPlayed = sessionStorage.getItem('hasPlayedDoorTransition') === 'true';
-
-    // If already played, low-end device, or on mobile, bypass the intro animation entirely
-    if (hasPlayed || lowEnd || isMobile) {
-      setIsIntroActive(false);
-      setIsDoorOpeningStarted(true);
-      setIsIntroComplete(true);
-      document.body.style.overflow = '';
-    } else {
-      setIsIntroActive(true);
-      setIsDoorOpeningStarted(false);
-      setIsIntroComplete(false);
-      document.body.style.overflow = 'hidden';
-    }
-
-    setIsInitialized(true);
+    document.body.style.overflow = '';
   }, []);
 
   const skipIntro = () => {

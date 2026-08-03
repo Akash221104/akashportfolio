@@ -140,11 +140,17 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-full overflow-hidden select-text flex items-center justify-center min-h-screen py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20 group/section bg-black lg:bg-transparent"
+      className="relative w-full overflow-hidden select-text flex items-center justify-center min-h-screen py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20 group/section bg-zinc-950/90 lg:bg-transparent"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* High-Tech Mobile & Desktop Background Grid & Glow Overlay */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-1/4 -left-16 w-64 h-64 sm:w-96 sm:h-96 rounded-full bg-sky-500/12 blur-[70px] sm:blur-[110px]" />
+        <div className="absolute bottom-1/4 -right-16 w-64 h-64 sm:w-96 sm:h-96 rounded-full bg-purple-500/12 blur-[70px] sm:blur-[110px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(56,189,248,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(168,85,247,0.035)_1px,transparent_1px)] bg-[size:32px_32px] sm:bg-[size:48px_48px]" />
+      </div>
       {/* 3D Backdrop Canvas — desktop only; on mobile the LowEndFallback overlaps main content */}
       <div className="hidden lg:block">
         <About3D mouse={mouseRef} scrollProgress={scrollRef} />

@@ -298,7 +298,7 @@ export default function AskAkashAI() {
             onClick={handleOpen}
           >
             <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 animate-pulse" />
-            <span className="truncate">{bubbleText}</span>
+            <span>Ask Akash AI</span>
             {/* Triangle pointer */}
             <span className="absolute -bottom-2 right-4 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-blue-600" />
           </motion.div>

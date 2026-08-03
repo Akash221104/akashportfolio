@@ -11,15 +11,21 @@ interface AIAvatarHologramProps {
 const TECH_STACK = ['Next.js', 'Python', 'AI / LLMs', 'TypeScript', 'React', 'Node.js', 'PyTorch'];
 
 export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) {
-  const [hasSeenBoot, setHasSeenBoot] = useState(() => {
-    if (typeof window === 'undefined') return false;
+  const [hasSeenBoot, setHasSeenBoot] = useState(true);
+  const [booting, setBooting] = useState(false);
+
+  // Check localStorage after initial SSR client hydration to prevent hydration mismatches
+  useEffect(() => {
     try {
-      return localStorage.getItem('has_seen_ai_boot') === 'true';
+      const seen = localStorage.getItem('has_seen_ai_boot') === 'true';
+      if (!seen) {
+        setHasSeenBoot(false);
+        setBooting(true);
+      }
     } catch {
-      return false;
+      // ignore
     }
-  });
-  const [booting, setBooting] = useState(() => !hasSeenBoot);
+  }, []);
   const [bootStep, setBootStep] = useState(0);
   const [techIndex, setTechIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
@@ -29,7 +35,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
   // 3D Mouse Parallax Tilt state following global cursor
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -91,7 +97,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
         if (entry.isIntersecting) {
           if (videoRef.current) {
             videoRef.current.currentTime = 0;
-            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => { });
           }
         } else {
           if (videoRef.current) {
@@ -153,7 +159,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
       if (!nextMuted) {
         if (videoRef.current.paused || !isPlaying) {
           videoRef.current.currentTime = 0;
-          videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+          videoRef.current.play().then(() => setIsPlaying(true)).catch(() => { });
         }
       }
     }
@@ -163,7 +169,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
   const handleReplayVideo = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => { });
     }
   };
 
@@ -175,7 +181,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
         setIsMuted(false);
       }
       videoRef.current.currentTime = 0;
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => { });
     }
     setTimeout(() => setShowToast(false), 3500);
   };
@@ -191,10 +197,10 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-[440px] md:max-w-[500px] flex flex-col items-center justify-center select-none py-3 sm:py-6 mx-auto">
+    <div ref={containerRef} className="relative w-full max-w-[360px] xs:max-w-[420px] sm:max-w-[480px] md:max-w-[540px] lg:max-w-[580px] flex flex-col items-center justify-center select-none py-3 sm:py-6 mx-auto">
 
       {/* Ambient Soft Cyan Backdrop Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] xs:w-[300px] sm:w-[360px] h-[260px] xs:h-[300px] sm:h-[360px] rounded-full bg-gradient-to-tr from-sky-500/25 via-blue-600/15 to-transparent blur-[80px] sm:blur-[100px] pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] xs:w-[340px] sm:w-[420px] h-[280px] xs:h-[340px] sm:h-[420px] rounded-full bg-gradient-to-tr from-sky-500/25 via-blue-600/15 to-transparent blur-[80px] sm:blur-[100px] pointer-events-none animate-pulse-slow" />
 
       {/* Floating Single Tech Pill Crossfade (Top Right Badge) */}
       <div className="absolute -top-2 right-0 sm:top-0 sm:right-2 z-30">
@@ -205,7 +211,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-sky-950/90 border border-sky-400/30 text-[10px] sm:text-[11px] font-mono font-semibold text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.2)] backdrop-blur-md"
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-sky-950/90 text-[10px] sm:text-[11px] font-mono font-semibold text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.25)] backdrop-blur-md"
           >
             <Cpu className="w-3 h-3 text-sky-400 animate-spin-slow" />
             <span>Active: {TECH_STACK[techIndex]}</span>
@@ -223,7 +229,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
           transition: 'transform 0.12s cubic-bezier(0.1, 1, 0.2, 1)',
           transformStyle: 'preserve-3d',
         }}
-        className="relative z-20 w-full aspect-[4/5] max-h-[340px] xs:max-h-[380px] sm:max-h-[440px] md:max-h-[480px] flex items-center justify-center cursor-pointer group touch-manipulation"
+        className="relative z-20 w-full aspect-[4/5] max-h-[380px] xs:max-h-[440px] sm:max-h-[500px] md:max-h-[540px] lg:max-h-[580px] flex items-center justify-center cursor-pointer group touch-manipulation"
       >
 
         {/* Audio Toggle & Replay Action Controls Overlay (Top Center) */}
@@ -231,11 +237,10 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
           <div className="absolute top-2 sm:top-4 z-40 flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={(e) => { e.stopPropagation(); handleToggleAudio(); }}
-              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-mono text-[11px] sm:text-xs font-bold shadow-[0_0_20px_rgba(56,189,248,0.5)] backdrop-blur-md flex items-center gap-1 sm:gap-1.5 cursor-pointer border border-white/20 transition-all ${
-                isMuted
+              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-mono text-[11px] sm:text-xs font-bold shadow-[0_0_20px_rgba(56,189,248,0.5)] backdrop-blur-md flex items-center gap-1 sm:gap-1.5 cursor-pointer transition-all ${isMuted
                   ? 'bg-sky-500/90 hover:bg-sky-400 text-white animate-bounce'
                   : 'bg-emerald-500/90 hover:bg-emerald-400 text-white'
-              }`}
+                }`}
             >
               {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
               <span className="hidden xs:inline">{isMuted ? 'Voice OFF 🔊' : 'Voice ON 🔊'}</span>
@@ -245,7 +250,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
             {!isPlaying && (
               <button
                 onClick={(e) => { e.stopPropagation(); handleReplayVideo(); }}
-                className="p-1.5 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-sky-400 border border-sky-400/30 shadow-lg cursor-pointer"
+                className="p-1.5 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-sky-400 shadow-lg cursor-pointer"
                 title="Replay Video"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -261,7 +266,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6 }}
-              className="absolute inset-0 z-40 rounded-2xl sm:rounded-3xl bg-zinc-950/92 border border-sky-500/30 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 text-center shadow-2xl"
+              className="absolute inset-0 z-40 rounded-2xl sm:rounded-3xl bg-zinc-950/92 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 text-center shadow-2xl"
             >
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-sky-500/30 border-t-sky-400 animate-spin mb-3 sm:mb-4" />
               <h4 className="font-mono text-[11px] sm:text-xs font-bold text-sky-400 tracking-wider uppercase mb-2">
@@ -284,7 +289,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
           )}
         </AnimatePresence>
 
-        {/* Direct Transparent Video Element */}
+        {/* Transparent Video Element with Smooth Natural Holographic Glow */}
         <div className="relative w-full h-full flex items-center justify-center overflow-visible">
           <video
             ref={videoRef}
@@ -294,24 +299,17 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
             preload="auto"
             poster="/hero-poster.webp"
             onEnded={handleVideoEnded}
-            className="w-full h-full object-contain filter drop-shadow-[0_15px_40px_rgba(56,189,248,0.4)] transition-transform duration-300 group-hover:scale-[1.04]"
+            className="w-full h-full object-contain opacity-95 filter brightness-[0.88] drop-shadow-[0_0_40px_rgba(14,165,233,0.55)] transition-transform duration-300 group-hover:scale-[1.04] outline-none border-none"
           >
             <source src="/Akash Satpute_s Video (1)-Picsart-BackgroundRemover.webm" type="video/webm" />
             <source src="/Akash Satpute_s Video (1).mp4" type="video/mp4" />
             <source src="/OPENING.webm" type="video/webm" />
           </video>
         </div>
-
-        {/* Holographic 3D Floor Shadow Ring Beneath Floating Model */}
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -bottom-4 sm:-bottom-6 left-1/2 -translate-x-1/2 w-[65%] sm:w-[70%] h-6 sm:h-8 rounded-full border border-sky-400/40 bg-sky-500/20 blur-[5px] sm:blur-[6px] shadow-[0_0_35px_rgba(56,189,248,0.6)] pointer-events-none"
-        />
       </motion.div>
 
       {/* Floating Caption Badge */}
-      <div className="relative z-30 mt-2 sm:mt-3 flex flex-wrap sm:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-zinc-900/90 border border-white/10 shadow-lg backdrop-blur-md max-w-[95%] text-center">
+      <div className="relative z-30 mt-2 sm:mt-3 flex flex-wrap sm:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-zinc-900/90 shadow-[0_0_15px_rgba(56,189,248,0.25)] backdrop-blur-md max-w-[95%] text-center">
         <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse shrink-0" />
         <span className="font-display text-[11px] sm:text-xs font-semibold text-white">AKASH AI</span>
         <span className="text-zinc-500 hidden xs:inline">•</span>
@@ -319,7 +317,7 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
         {onOpenChat && (
           <button
             onClick={onOpenChat}
-            className="ml-1 px-2 py-0.5 rounded bg-sky-500/25 hover:bg-sky-500/40 text-sky-300 text-[10px] font-mono font-semibold transition-all cursor-pointer border border-sky-400/30"
+            className="ml-1 px-2 py-0.5 rounded bg-sky-500/25 hover:bg-sky-500/40 text-sky-300 text-[10px] font-mono font-semibold transition-all cursor-pointer"
           >
             Ask AI →
           </button>

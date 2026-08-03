@@ -7,7 +7,7 @@ export default function VisitorCounter() {
   const [count, setCount] = useState<number | null>(() => {
     if (typeof window === 'undefined') return null;
     const localCountKey = 'local_visitor_count';
-    const BASE_SEED = 500;
+    const BASE_SEED = 2000;
     const localCountVal = parseInt(localStorage.getItem(localCountKey) || '0', 10);
     return BASE_SEED + localCountVal;
   });
@@ -15,7 +15,7 @@ export default function VisitorCounter() {
     const key = 'akash_satpute_portfolio_visitors_2026';
     const storageKey = 'has_visited_site';
     const localCountKey = 'local_visitor_count';
-    const BASE_SEED = 500;
+    const BASE_SEED = 2000;
 
     const hasVisited = sessionStorage.getItem(storageKey);
     let localCountVal = parseInt(localStorage.getItem(localCountKey) || '0', 10);
@@ -26,13 +26,11 @@ export default function VisitorCounter() {
       sessionStorage.setItem(storageKey, 'true');
     }
 
-    // Try to fetch from the free CountAPI for a global count
-    const endpoint = hasVisited
-      ? `https://countapi.mileshilliard.com/api/v1/get/${key}`
-      : `https://countapi.mileshilliard.com/api/v1/hit/${key}`;
+    // Fetch from internal Next.js native API endpoint with zero CORS or ad-blocker blocking
+    const endpoint = hasVisited ? '/api/visitor' : '/api/visitor?hit=true';
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
 
     fetch(endpoint, { signal: controller.signal })
       .then((res) => {
@@ -42,11 +40,12 @@ export default function VisitorCounter() {
       })
       .then((data) => {
         if (data && typeof data.value === 'number') {
-          setCount(BASE_SEED + data.value);
+          setCount(data.value);
         }
       })
-      .catch((err) => {
-        console.warn('VisitorCounter API failed or timed out, using local fallback:', err);
+      .catch(() => {
+        // Silent local fallback if offline or network fails
+        setCount(BASE_SEED + localCountVal);
       });
 
     return () => clearTimeout(timeoutId);
