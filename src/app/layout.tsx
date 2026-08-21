@@ -23,12 +23,14 @@ export const metadata: Metadata = {
     default: "Akash Satpute | AI Engineer & Full Stack Developer",
     template: "%s | Akash Satpute"
   },
-  description: "Computer Engineering Student and AI Engineer specializing in Retrieval-Augmented Generation (RAG), Full Stack Development, and developer community leadership. Explore Akash's work, internships, achievements, and blog posts.",
+  description: "M.Tech Student in Cyber Security at NIT Patna and AI Engineer specializing in Retrieval-Augmented Generation (RAG), Full Stack Development, and developer community leadership. Explore Akash's work, internships, achievements, and blog posts.",
   keywords: [
     "Akash Satpute",
     "Akash Satpute Portfolio",
-    "AI Engineer Navi Mumbai",
-    "Computer Engineering Student",
+    "NIT Patna Cyber Security",
+    "M.Tech Cyber Security NIT Patna",
+    "AI Engineer",
+    "Computer Engineering",
     "GDG On Campus Lead",
     "RAG AI Chatbot",
     "C-DAC Intern",
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://akashsatpute.dev",
     title: "Akash Satpute | AI Engineer & Full Stack Developer",
-    description: "Computer Engineering Student and AI Engineer specializing in Retrieval-Augmented Generation (RAG), Full Stack Development, and developer community leadership.",
+    description: "M.Tech Student in Cyber Security at NIT Patna and AI Engineer specializing in Retrieval-Augmented Generation (RAG), Full Stack Development, and developer community leadership.",
     siteName: "Akash Satpute Portfolio",
     images: [
       {

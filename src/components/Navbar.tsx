@@ -45,13 +45,19 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-xl font-display font-bold tracking-tight text-white hover:opacity-90 transition-opacity"
-        >
-          AKASH<span className="text-primary">.</span>
-        </Link>
+        {/* Logo & Top Tag */}
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="text-xl font-display font-bold tracking-tight text-white hover:opacity-90 transition-opacity"
+          >
+            AKASH<span className="text-primary">.</span>
+          </Link>
+          <span className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-[10px] font-mono font-bold text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.25)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            M.Tech @ NIT Patna
+          </span>
+        </div>
 
         {/* Desktop Nav Items */}
         <div className="hidden md:flex items-center gap-8">

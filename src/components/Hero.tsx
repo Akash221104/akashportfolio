@@ -10,6 +10,7 @@ import AIAvatarHologram from './AIAvatarHologram';
 import { useAnimation } from '@/context/AnimationContext';
 
 const BIO_ROLES = [
+  'M.Tech Cyber Security @ NIT Patna',
   'Building AI Products',
   'Building Intelligent Systems',
   'Building Developer Tools',
@@ -24,6 +25,14 @@ export default function Hero({ onOpenChat }: HeroProps) {
   const { isIntroActive, isDoorOpeningStarted } = useAnimation();
   const shouldAnimate = !isIntroActive;
   const [roleIndex, setRoleIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const { scrollY } = useScroll();
   const avatarScale = useTransform(scrollY, [0, 500], [1, 0.75]);
@@ -62,7 +71,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
           }
           : {}
       }
-      className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-20 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 md:px-12 bg-background"
+      className="relative min-h-screen flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible pt-20 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 md:px-12 bg-background"
     >
       {/* 60fps Futuristic Backdrop Engine */}
       <FuturisticBackground />
@@ -70,30 +79,31 @@ export default function Hero({ onOpenChat }: HeroProps) {
       {/* Hero Split Layout Grid */}
       <div className="relative z-20 max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto">
 
-        {/* LEFT COLUMN (Middle-aligned Text & CTAs) */}
+        {/* LEFT COLUMN (Left-aligned Text & CTAs on Desktop) */}
         <motion.div
           initial={shouldAnimate ? { opacity: 0, x: -30 } : false}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
-          className="lg:col-span-7 flex flex-col items-center justify-center text-center py-2 sm:py-6 lg:py-0"
+          className="lg:col-span-7 flex flex-col items-center lg:items-start justify-center text-center lg:text-left py-2 sm:py-6 lg:py-0"
         >
-          {/* Status Badge */}
+          {/* Main Prominent NIT Patna Tag Banner */}
           <motion.div
             initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-950/70 border border-sky-400/30 text-xs font-mono font-medium text-sky-300 mb-4 sm:mb-6 shadow-[0_0_15px_rgba(56,189,248,0.2)] backdrop-blur-md max-w-[90vw] text-center"
+            className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-full bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-cyan-950/90 border-2 border-emerald-400/60 text-emerald-300 text-xs sm:text-sm font-mono font-bold shadow-[0_0_25px_rgba(52,211,153,0.35)] backdrop-blur-md mb-4 sm:mb-6 max-w-full text-center"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 shadow-[0_0_8px_#34d399]" />
-            <span className="truncate">Open to Full-time Opportunities</span>
+            <BookOpen className="w-4 h-4 text-emerald-400 animate-bounce shrink-0" />
+            <span className="tracking-wide truncate">M.Tech Cyber Security @ NIT Patna</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0 hidden xs:inline-block" />
           </motion.div>
 
-          {/* Large Sci-Fi Assembly Headline (Single Line Desktop Layout) */}
+          {/* Large Sci-Fi Assembly Headline (Strictly Single Line) */}
           <motion.h1
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-display font-black tracking-tight leading-tight mb-4 sm:mb-6 text-white text-center sm:whitespace-nowrap max-w-full"
+            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-black tracking-tight leading-none mb-4 sm:mb-6 text-white whitespace-nowrap max-w-full text-center lg:text-left"
             style={{
               textShadow:
                 '0 1px 0 #1e1b4b, 0 2px 0 #312e81, 0 3px 0 #3730a3, 0 4px 0 #4338ca, 0 5px 0 #4f46e5, 1px 8px 16px rgba(56, 189, 248, 0.4), 0 12px 24px rgba(0, 0, 0, 0.9)',
@@ -103,14 +113,14 @@ export default function Hero({ onOpenChat }: HeroProps) {
           </motion.h1>
 
           {/* Smooth Crossfade Bio Role Subtitle */}
-          <div className="h-8 mb-3 sm:mb-4 overflow-hidden flex items-center justify-center w-full px-2">
+          <div className="h-8 mb-3 sm:mb-4 overflow-hidden flex items-center justify-center lg:justify-start w-full">
             <motion.div
               key={BIO_ROLES[roleIndex]}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.4 }}
-              className="text-base sm:text-xl md:text-2xl font-mono font-bold text-sky-400 tracking-wide flex items-center gap-2 justify-center text-center truncate max-w-full"
+              className="text-base sm:text-xl md:text-2xl font-mono font-bold text-sky-400 tracking-wide flex items-center gap-2 justify-center lg:justify-start truncate max-w-full"
             >
               <Sparkles className="w-4 h-4 text-sky-300 animate-spin-slow shrink-0" />
               <span className="truncate">{BIO_ROLES[roleIndex]}</span>
@@ -122,17 +132,17 @@ export default function Hero({ onOpenChat }: HeroProps) {
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-zinc-300 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed mb-6 sm:mb-8 text-center mx-auto px-2"
+            className="text-zinc-300 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed mb-6 sm:mb-8 text-center lg:text-left mx-auto lg:mx-0 px-1"
           >
             Building AI products, developer tools, and intelligent web experiences that solve real-world problems.
           </motion.p>
 
-          {/* Action CTAs (Responsive Grid for Mobile, Flex for Desktop) */}
+          {/* Action CTAs */}
           <motion.div
             initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mb-6 sm:mb-8"
+            className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mb-6 sm:mb-8"
           >
             {/* Primary CTA: View Projects */}
             <a href="#projects" className="w-full sm:w-auto">
@@ -178,19 +188,19 @@ export default function Hero({ onOpenChat }: HeroProps) {
             </a>
           </motion.div>
 
-          {/* Social Links Row (Centered) */}
+          {/* Social Links Row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-6"
+            className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-4"
           >
             {/* LinkedIn */}
             <a
               href="https://www.linkedin.com/in/akash-satpute-548b5a256/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 sm:p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-sky-400 hover:border-sky-500/40 hover:bg-sky-500/10 transition-all duration-300 shadow-md group cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-sky-400 hover:border-sky-500/40 hover:bg-sky-500/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="LinkedIn Profile"
             >
               <Linkedin className="w-4 h-4" />
@@ -202,7 +212,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
               href="https://github.com/Akash221104"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 sm:p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/40 hover:bg-white/10 transition-all duration-300 shadow-md group cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/40 hover:bg-white/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="GitHub Profile"
             >
               <Github className="w-4 h-4" />
@@ -214,7 +224,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
               href="https://akashblogss.hashnode.dev/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 sm:p-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-purple-400 hover:border-purple-500/40 hover:bg-purple-500/10 transition-all duration-300 shadow-md group cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-zinc-400 hover:text-purple-400 hover:border-purple-500/40 hover:bg-purple-500/10 transition-all duration-300 shadow-md group cursor-pointer"
               aria-label="Hashnode Blog"
             >
               <BookOpen className="w-4 h-4" />
@@ -223,17 +233,17 @@ export default function Hero({ onOpenChat }: HeroProps) {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN (45% desktop width - lg:col-span-5) */}
+        {/* RIGHT COLUMN (Desktop Parallax Only, Anchored to Bottom) */}
         <motion.div
-          style={{
+          style={isDesktop ? {
             scale: avatarScale,
             opacity: avatarOpacity,
             y: avatarY,
-          }}
+          } : {}}
           initial={shouldAnimate ? { opacity: 0, x: 30 } : false}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="lg:col-span-5 flex justify-center items-center relative w-full mt-6 lg:mt-0 pt-6 lg:pt-0"
+          className="lg:col-span-5 flex justify-center items-end self-end relative w-full mt-4 lg:mt-0 pt-2 lg:pt-0 overflow-visible h-full"
         >
           <AIAvatarHologram onOpenChat={handleOpenChatTrigger} />
         </motion.div>

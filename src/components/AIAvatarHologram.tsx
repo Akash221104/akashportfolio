@@ -39,10 +39,10 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Global mouse & touch movement tracking so the avatar turns towards cursor/finger anywhere on screen
+  // Global mouse movement tracking so the avatar turns towards cursor on desktop screens
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (window.innerWidth < 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
       const centerX = windowWidth / 2;
@@ -59,31 +59,9 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
       setRotateY(rY);
     };
 
-    const handleGlobalTouchMove = (e: TouchEvent) => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        const centerX = windowWidth / 2;
-        const centerY = windowHeight / 2;
-
-        const touchX = touch.clientX - centerX;
-        const touchY = touch.clientY - centerY;
-
-        const rY = (touchX / centerX) * 18;
-        const rX = -(touchY / centerY) * 14;
-
-        setRotateX(rX);
-        setRotateY(rY);
-      }
-    };
-
     window.addEventListener('mousemove', handleGlobalMouseMove);
-    window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
-      window.removeEventListener('touchmove', handleGlobalTouchMove);
     };
   }, []);
 
@@ -197,13 +175,13 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-[360px] xs:max-w-[420px] sm:max-w-[480px] md:max-w-[540px] lg:max-w-[580px] flex flex-col items-center justify-center select-none py-3 sm:py-6 mx-auto">
+    <div ref={containerRef} className="relative w-full max-w-[340px] xs:max-w-[400px] sm:max-w-[540px] md:max-w-[640px] lg:max-w-[740px] flex flex-col items-center justify-end select-none py-0 mx-auto">
 
-      {/* Ambient Soft Cyan Backdrop Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] xs:w-[340px] sm:w-[420px] h-[280px] xs:h-[340px] sm:h-[420px] rounded-full bg-gradient-to-tr from-sky-500/25 via-blue-600/15 to-transparent blur-[80px] sm:blur-[100px] pointer-events-none animate-pulse-slow" />
+      {/* 3D Soft Ambient Glow Aura */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] xs:w-[360px] sm:w-[520px] h-[300px] xs:h-[360px] sm:h-[520px] rounded-full bg-gradient-to-tr from-sky-500/25 via-indigo-600/15 to-emerald-500/10 blur-[100px] sm:blur-[130px] pointer-events-none animate-pulse-slow" />
 
       {/* Floating Single Tech Pill Crossfade (Top Right Badge) */}
-      <div className="absolute -top-2 right-0 sm:top-0 sm:right-2 z-30">
+      <div className="absolute top-2 right-0 sm:top-2 sm:right-2 z-30">
         <AnimatePresence mode="wait">
           <motion.div
             key={TECH_STACK[techIndex]}
@@ -219,19 +197,18 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
         </AnimatePresence>
       </div>
 
-      {/* Main 3D Floating Avatar Container with Global Mouse & Touch Parallax Reaction */}
+      {/* Main 3D Floating Avatar Container - Anchored to Bottom */}
       <motion.div
         onClick={handleAvatarClick}
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transition: 'transform 0.12s cubic-bezier(0.1, 1, 0.2, 1)',
           transformStyle: 'preserve-3d',
         }}
-        className="relative z-20 w-full aspect-[4/5] max-h-[380px] xs:max-h-[440px] sm:max-h-[500px] md:max-h-[540px] lg:max-h-[580px] flex items-center justify-center cursor-pointer group touch-manipulation"
+        className="relative z-20 w-full aspect-[4/5] max-h-[380px] xs:max-h-[440px] sm:max-h-[580px] md:max-h-[660px] lg:max-h-[740px] flex items-end justify-center cursor-pointer group touch-manipulation overflow-visible"
       >
-
         {/* Audio Toggle & Replay Action Controls Overlay (Top Center) */}
         {!booting && (
           <div className="absolute top-2 sm:top-4 z-40 flex items-center gap-1.5 sm:gap-2">
@@ -259,38 +236,8 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
           </div>
         )}
 
-        {/* First Visit Boot Sequence Overlay */}
-        <AnimatePresence>
-          {booting && !hasSeenBoot && (
-            <motion.div
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="absolute inset-0 z-40 rounded-2xl sm:rounded-3xl bg-zinc-950/92 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 text-center shadow-2xl"
-            >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-sky-500/30 border-t-sky-400 animate-spin mb-3 sm:mb-4" />
-              <h4 className="font-mono text-[11px] sm:text-xs font-bold text-sky-400 tracking-wider uppercase mb-2">
-                Initializing AKASH AI
-              </h4>
-
-              <div className="font-mono text-[10px] sm:text-[11px] text-zinc-400 space-y-1 h-12">
-                {bootStep >= 0 && <p className="animate-fade-in">✓ Loading Knowledge Base...</p>}
-                {bootStep >= 1 && <p className="animate-fade-in">✓ Loading Projects &amp; Experience...</p>}
-                {bootStep >= 2 && <p className="animate-fade-in text-sky-300">✓ AI Ready.</p>}
-              </div>
-
-              <button
-                onClick={(e) => { e.stopPropagation(); handleSkipBoot(); }}
-                className="mt-4 sm:mt-6 text-[10px] font-mono text-zinc-500 hover:text-sky-300 underline cursor-pointer py-1 px-2"
-              >
-                [Skip Intro]
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Transparent Video Element with Smooth Natural Holographic Glow */}
-        <div className="relative w-full h-full flex items-center justify-center overflow-visible">
+        {/* Transparent Video Element - Bottom Anchored */}
+        <div className="relative w-full h-full flex items-end justify-center overflow-visible">
           <video
             ref={videoRef}
             autoPlay
@@ -299,7 +246,11 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
             preload="auto"
             poster="/hero-poster.webp"
             onEnded={handleVideoEnded}
-            className="w-full h-full object-contain opacity-95 filter brightness-[0.88] drop-shadow-[0_0_40px_rgba(14,165,233,0.55)] transition-transform duration-300 group-hover:scale-[1.04] outline-none border-none"
+            style={{
+              maskImage: 'linear-gradient(to bottom, black 0%, black 86%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 86%, transparent 98%)',
+            }}
+            className="w-full h-full object-contain object-bottom filter brightness-[0.96] drop-shadow-[0_10px_40px_rgba(14,165,233,0.55)] transition-transform duration-300 group-hover:scale-[1.03] outline-none border-none"
           >
             <source src="/Akash Satpute_s Video (1)-Picsart-BackgroundRemover.webm" type="video/webm" />
             <source src="/Akash Satpute_s Video (1).mp4" type="video/mp4" />
@@ -308,20 +259,26 @@ export default function AIAvatarHologram({ onOpenChat }: AIAvatarHologramProps) 
         </div>
       </motion.div>
 
-      {/* Floating Caption Badge */}
-      <div className="relative z-30 mt-2 sm:mt-3 flex flex-wrap sm:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-zinc-900/90 shadow-[0_0_15px_rgba(56,189,248,0.25)] backdrop-blur-md max-w-[95%] text-center">
-        <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse shrink-0" />
-        <span className="font-display text-[11px] sm:text-xs font-semibold text-white">AKASH AI</span>
-        <span className="text-zinc-500 hidden xs:inline">•</span>
-        <span className="font-mono text-[9px] sm:text-[10px] text-sky-300">Digital Portfolio Guide</span>
-        {onOpenChat && (
-          <button
-            onClick={onOpenChat}
-            className="ml-1 px-2 py-0.5 rounded bg-sky-500/25 hover:bg-sky-500/40 text-sky-300 text-[10px] font-mono font-semibold transition-all cursor-pointer"
-          >
-            Ask AI →
-          </button>
-        )}
+      {/* Sleek Futuristic Holographic Light Stage Base at Bottom */}
+      <div className="w-full flex flex-col items-center relative z-30 -mt-2">
+        {/* Horizontal Glowing Light Emitter Beam */}
+        <div className="w-[85%] sm:w-[90%] h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_20px_#38bdf8] opacity-80" />
+        
+        {/* Sci-Fi Status Dock Pill */}
+        <div className="mt-2.5 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-zinc-950/90 border border-sky-400/40 shadow-[0_0_20px_rgba(56,189,248,0.3)] backdrop-blur-md">
+          <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse shrink-0" />
+          <span className="font-display text-[11px] sm:text-xs font-semibold text-white">AKASH AI</span>
+          <span className="text-zinc-600">•</span>
+          <span className="font-mono text-[9px] sm:text-[10px] text-sky-300">Digital Portfolio Guide</span>
+          {onOpenChat && (
+            <button
+              onClick={onOpenChat}
+              className="ml-1 px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/40 text-sky-300 text-[10px] font-mono font-semibold transition-all cursor-pointer border border-sky-400/30"
+            >
+              Ask AI →
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Interactive Easter Egg Toast */}

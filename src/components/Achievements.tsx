@@ -63,34 +63,67 @@ export default function Achievements() {
                   </h3>
                 </div>
 
-                <div className="border-l-2 border-border/80 pl-4 space-y-1 ml-1">
-                  <h4 className="text-base font-display font-bold text-white leading-tight">
-                    Pillai College of Engineering
-                  </h4>
-                  <span className="text-xs text-primary font-semibold block">
-                    Bachelor of Technology (B.Tech)
-                  </span>
-                  <span className="text-xs text-muted block">
-                    Branch: Computer Engineering
-                  </span>
-                  <div className="flex items-center gap-1.5 text-xs text-muted/80 mt-2">
-                    <Calendar className="w-3.5 h-3.5 text-muted" />
-                    2022 – 2026
+                <div className="space-y-5">
+                  {/* NIT Patna - Featured #1 Education Entry */}
+                  <div className="p-4 rounded-xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-950/40 via-zinc-950/80 to-teal-950/40 shadow-[0_0_20px_rgba(16,185,129,0.18)] relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-emerald-400 via-teal-400 to-transparent" />
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-[0_0_10px_rgba(52,211,153,0.3)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        LATEST DEGREE • PURSUING
+                      </span>
+                      <span className="text-[10px] font-mono text-emerald-400/80 font-bold uppercase tracking-wider">
+                        NIT PATNA
+                      </span>
+                    </div>
+
+                    <h4 className="text-base sm:text-lg font-display font-black text-white leading-tight mb-1 group-hover:text-emerald-300 transition-colors">
+                      National Institute of Technology Patna
+                    </h4>
+                    
+                    <div className="text-xs font-bold text-emerald-400 tracking-wide mb-1">
+                      Master of Technology (M.Tech)
+                    </div>
+
+                    <div className="inline-block px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono font-semibold text-emerald-200 mb-2">
+                      🛡️ Specialization: Cyber Security
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Current Student</span>
+                    </div>
+                  </div>
+
+                  {/* Pillai College of Engineering - Second Education Entry */}
+                  <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.02] space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="text-sm font-display font-bold text-white leading-tight">
+                        Pillai College of Engineering
+                      </h4>
+                      <span className="text-[10px] font-mono text-muted">2022 – 2026</span>
+                    </div>
+                    <span className="text-xs text-sky-400 font-semibold block">
+                      Bachelor of Technology (B.Tech)
+                    </span>
+                    <span className="text-xs text-muted block">
+                      Branch: Computer Engineering
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* CGPA display box */}
-              <div className="mt-8 p-4 rounded-xl border border-border bg-white/[0.01] flex items-center justify-between">
+              <div className="mt-6 p-4 rounded-xl border border-border bg-white/[0.01] flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-bold text-muted uppercase tracking-wider block">Academic standing</span>
-                  <span className="text-xs text-white font-medium">Excellent rating</span>
+                  <span className="text-xs text-white font-medium">B.Tech 8.9+ CGPA • NIT Patna Scholar</span>
                 </div>
                 <div className="text-right">
                   <span className="text-2xl font-display font-black text-gradient-primary">
                     8.9+
                   </span>
-                  <span className="text-[10px] text-muted block mt-0.5">CGPA Score</span>
+                  <span className="text-[10px] text-muted block mt-0.5">B.Tech CGPA</span>
                 </div>
               </div>
             </Card>

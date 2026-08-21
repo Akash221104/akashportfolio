@@ -278,6 +278,11 @@ export default function About() {
           <div className="flex flex-wrap justify-center lg:justify-start gap-2 md:gap-3 font-mono text-[9px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase">
             {[
               {
+                text: 'M.Tech Cyber Security @ NIT Patna',
+                border: 'border-emerald-500/20 bg-emerald-950/15 text-emerald-400',
+                hover: 'hover:text-emerald-300 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(52,211,153,0.2)]',
+              },
+              {
                 text: 'Building AI Systems',
                 border: 'border-sky-500/20 bg-sky-950/15 text-sky-400',
                 hover: 'hover:text-sky-300 hover:border-sky-500/50 hover:shadow-[0_0_15px_rgba(56,189,248,0.2)]',
@@ -323,17 +328,17 @@ export default function About() {
               color: 'hover:border-sky-500/50',
               text: (
                 <>
-                  I am a Computer Engineering student specializing in building{' '}
-                  <span className="text-sky-400 font-bold border-b border-sky-400/20 hover:text-sky-300 hover:border-sky-400 transition-all duration-200">
-                    intelligent systems
-                  </span>
-                  , optimizing{' '}
-                  <span className="text-purple-400 font-bold border-b border-purple-400/20 hover:text-purple-300 hover:border-purple-400 transition-all duration-200">
-                    Retrieval-Augmented Generation (RAG)
+                  I am an{' '}
+                  <span className="text-emerald-400 font-bold border-b border-emerald-400/20 hover:text-emerald-300 hover:border-emerald-400 transition-all duration-200">
+                    M.Tech student in Cyber Security at NIT Patna
                   </span>{' '}
-                  models, and developing modular{' '}
-                  <span className="text-blue-400 font-bold border-b border-blue-400/20 hover:text-blue-300 hover:border-blue-400 transition-all duration-200">
-                    full-stack web applications
+                  and Computer Engineering graduate specializing in building{' '}
+                  <span className="text-sky-400 font-bold border-b border-sky-400/20 hover:text-sky-300 hover:border-sky-400 transition-all duration-200">
+                    intelligent AI systems
+                  </span>
+                  , securing software architectures, and optimizing{' '}
+                  <span className="text-purple-400 font-bold border-b border-purple-400/20 hover:text-purple-300 hover:border-purple-400 transition-all duration-200">
+                    RAG models &amp; full-stack applications
                   </span>
                   .
                 </>

@@ -103,11 +103,19 @@ const KNOWLEDGE_BASE = {
     analytics: ['SQL', 'Data Analysis', 'Dashboard Development', 'Data Visualization']
   },
   education: {
-    institution: 'Pillai College of Engineering',
-    degree: 'Bachelor of Technology',
-    branch: 'Computer Engineering',
-    duration: '2022–2026',
-    cgpa: '8.9+'
+    mtech: {
+      institution: 'National Institute of Technology Patna (NIT Patna)',
+      degree: 'Master of Technology (M.Tech)',
+      branch: 'Cyber Security',
+      status: 'Pursuing'
+    },
+    btech: {
+      institution: 'Pillai College of Engineering',
+      degree: 'Bachelor of Technology (B.Tech)',
+      branch: 'Computer Engineering',
+      duration: '2022–2026',
+      cgpa: '8.9+'
+    }
   },
   achievements: [
     'GDG On Campus Lead',
@@ -468,15 +476,16 @@ This certification validates his foundational understanding of network security,
   }
 
   // Intent 7: Education
-  if (normalized.includes('education') || normalized.includes('college') || normalized.includes('university') || normalized.includes('degree') || normalized.includes('gpa') || normalized.includes('cgpa') || normalized.includes('pillai') || normalized.includes('student')) {
+  if (normalized.includes('education') || normalized.includes('college') || normalized.includes('university') || normalized.includes('degree') || normalized.includes('gpa') || normalized.includes('cgpa') || normalized.includes('pillai') || normalized.includes('nit') || normalized.includes('patna') || normalized.includes('mtech') || normalized.includes('m.tech') || normalized.includes('student')) {
     return {
-      answer: `Akash is pursuing a **Bachelor of Technology (B.Tech)** in **Computer Engineering** at **Pillai College of Engineering** (2022–2026).
-He maintains an excellent academic record with a CGPA of **8.9+** out of 10.`,
+      answer: `Akash's educational background includes:
+• **M.Tech in Cyber Security** at **National Institute of Technology Patna (NIT Patna)** (Currently Pursuing).
+• **B.Tech in Computer Engineering** at **Pillai College of Engineering** (2022–2026) with an impressive CGPA of **8.9+** out of 10.`,
       suggestions: [
-        'What is his CGPA?',
+        'Tell me about M.Tech at NIT Patna',
+        'What is his B.Tech CGPA?',
         'Tell me about GDG On Campus Lead',
-        'What certifications does he have?',
-        'Tell me about C-DAC experience'
+        'What certifications does he have?'
       ]
     };
   }
